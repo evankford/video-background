@@ -1,4 +1,4 @@
-# Finally, a good background video module.
+# Finally, a good background video component.
 
 Looking for an easy way to include autoplay/good background video in your site?
 
