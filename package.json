@@ -1,6 +1,7 @@
 {
   "name": "@atmtfy/video-background",
   "version": "0.0.2",
+  "author" : "Automatify",
   "description": "Automatic background video from various sources (Youtube, MP4, vimeo) with autoplay across devices. No JS dependencies.",
   "main": "src/index.ts",
   "scripts": {
@@ -9,6 +10,7 @@
     "dev": "webpack-cli serve --config webpack.dev.js --mode=development",
     "build:demo": "cp -R dist demo"
   },
+  "publishConfig": {"access": "public"} ,
   "repository": {
     "type": "git",
     "url": "@atmtfy/video-background"
