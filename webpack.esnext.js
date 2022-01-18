@@ -1,12 +1,10 @@
 const path = require("path");
 const { merge } = require("webpack-merge");
 const baseConfig = require('./webpack.base');
-const BundleAnalyzerPlugin =
-  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-
+// const BundleAnalyzerPlugin =  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = merge(baseConfig, {
-  name: "esnext",
+  name: "mjs",
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist/mjs"),
@@ -23,5 +21,5 @@ module.exports = merge(baseConfig, {
       },
     ],
   },
-  plugins: [new BundleAnalyzerPlugin()],
+  // plugins: [new BundleAnalyzerPlugin()],
 });

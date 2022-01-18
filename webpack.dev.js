@@ -5,6 +5,8 @@ const baseConfig = require('./webpack.base');
 
 module.exports = merge(baseConfig, {
   name: "dev",
+  devtool: "inline-source-map",
+
   output: {
     filename: "bundle.js",
     publicPath: "/dev/dist/",
@@ -32,14 +34,11 @@ module.exports = merge(baseConfig, {
     static: "./dev",
     open: true,
     https: true,
-    allowedHosts: [
-      'youtube-nocookie.com',
-      'youtube.com',
-    ],
+    allowedHosts: ["youtube-nocookie.com", "youtube.com"],
     devMiddleware: {
       index: true,
       // writeToDisk: true,
-      publicPath: '/dist'
+      publicPath: "/dist",
     },
     hot: true,
     // setupMiddlewares: (middlewares, devServer) => {
