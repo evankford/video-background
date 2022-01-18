@@ -6,10 +6,13 @@ export declare class VideoBackground extends HTMLElement {
         enabled: boolean;
         verbose: boolean;
     };
+    observer?: IntersectionObserver;
     muteButton?: HTMLElement;
     overlayEl?: HTMLElement;
     pauseButton?: HTMLElement;
     player?: YoutubeAPIPlayer;
+    playerReady: boolean;
+    isIntersecting: boolean;
     posterEl?: HTMLImageElement;
     scaleFactor: number;
     size?: string;
@@ -21,7 +24,7 @@ export declare class VideoBackground extends HTMLElement {
     url?: string;
     videoAspectRatio: number;
     videoCanAutoPlay: boolean;
-    videoEl?: HTMLElement;
+    videoEl?: HTMLVideoElement;
     widthStore?: number;
     constructor();
     init(): void;
@@ -55,12 +58,14 @@ export declare class VideoBackground extends HTMLElement {
      * @returns {undefined}
      */
     buildLocalVideo(): void;
+    handlePlayCheck(): void;
     muteVideo(): void;
     getSourcesFilteredBySize(sources: SourcesShape): SourcesShape;
     checkIfPassedBreakpoints(): void;
     buildPoster(): false | undefined;
     buildOverlay(): void;
     buildIntersectionObserver(): void;
+    handleIntersection(entries: IntersectionObserverEntry[], observer: IntersectionObserver): void;
     get autoplay(): boolean;
     get loop(): boolean;
     get muted(): boolean;

@@ -30,18 +30,22 @@ const initializeYouTubeAPI = (win) => {
  */
 const onYouTubePlayerReady = (event, startTime) => {
   const player = event.target;
+
   player.iframe = player.getIframe();
   player.mute();
   player.ready = true;
   player.seekTo(startTime < player.getDuration() ? startTime : 0);
-  player.playVideo();
+  if (player.shouldPlay == true) {
+    player.playVideo();
+  } else {
+    player.pauseVideo();
+  }
 };
 
 /**
  * YouTube event handler. Determine whether or not to loop the video.
  */
 const onYouTubePlayerStateChange = (event, startTime, win, speed = 1) => {
-  console.log(event);
   const player = event.target;
   const duration = (player.getDuration() - startTime) / speed;
 
@@ -49,7 +53,11 @@ const onYouTubePlayerStateChange = (event, startTime, win, speed = 1) => {
     if ((player.getCurrentTime() + 0.1) >= player.getDuration()) {
       player.pauseVideo();
       player.seekTo(startTime);
-      player.playVideo();
+      if (player.shouldPlay == true) {
+        player.playVideo();
+      } else {
+        player.pauseVideo();
+      }
     }
     requestAnimationFrame(doLoop);
   };
@@ -59,10 +67,20 @@ const onYouTubePlayerStateChange = (event, startTime, win, speed = 1) => {
      (player.getCurrentTime() === 0 || player.getCurrentTime() > duration - -0.1)) {
     return 'buffering';
   } else if (event.data === win.YT.PlayerState.PLAYING) {
-    requestAnimationFrame(doLoop);
-    return 'playing';
+    if (player.shouldPlay == true) {
+       requestAnimationFrame(doLoop);
+       return 'playing';
+
+      } else {
+        player.pauseVideo();
+        return 'pausing';
+     }
   } else if (event.data === win.YT.PlayerState.ENDED) {
-    player.playVideo();
+    if (player.shouldPlay == true) {
+      player.playVideo();
+    } else {
+      player.pauseVideo();
+    }
   }
 };
 
@@ -74,7 +92,6 @@ const initializeYouTubePlayer = ({
 }) => {
   let playerElement = getPlayerElement(container);
 
-  console.log(videoId);
   const makePlayer = () => {
     return new win.YT.Player(playerElement, {
 
@@ -82,7 +99,7 @@ const initializeYouTubePlayer = ({
       host: "https://www.youtube-nocookie.com",
       playerVars: {
         autohide: 1,
-        autoplay: 1,
+        autoplay: 0,
         controls: 0,
         enablejsapi: 1,
         iv_load_policy: 3,
@@ -93,7 +110,6 @@ const initializeYouTubePlayer = ({
         rel: 0,
         showinfo: 0,
         wmode: "opaque",
-        origin: "https://www.youtube-nocookie.com",
       },
       events: {
         onReady: function (event) {

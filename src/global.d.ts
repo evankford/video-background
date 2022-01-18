@@ -24,6 +24,10 @@ type SourcesShape = Array< LocalSource | Source>
 
 interface YoutubeAPIPlayer {
   ready: boolean,
+  shouldPlay: boolean,
   destroy?: function,
   iframe?: HTMLElement
+  playVideo: function,
+  pauseVideo: function,
+  mute: function
 }

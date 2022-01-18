@@ -25,11 +25,14 @@ export class VideoBackground extends HTMLElement {
     enabled: boolean,
     verbose: boolean,
   };
+  observer?: IntersectionObserver
 
   muteButton?:HTMLElement
   overlayEl?:HTMLElement
   pauseButton?:HTMLElement
   player?: YoutubeAPIPlayer
+  playerReady: boolean;
+  isIntersecting: boolean;
   posterEl?:HTMLImageElement
   scaleFactor: number
   size?: string
@@ -41,7 +44,7 @@ export class VideoBackground extends HTMLElement {
   url?:string
   videoAspectRatio:number
   videoCanAutoPlay: boolean
-  videoEl?:HTMLElement
+  videoEl?:HTMLVideoElement
   widthStore?:number
 
   constructor() {
@@ -55,9 +58,14 @@ export class VideoBackground extends HTMLElement {
     this.videoCanAutoPlay = false
     this.scaleFactor = 1.2;
     this.videoAspectRatio = .69;
+    this.playerReady = false;
+    this.isIntersecting = false;
     this.player = {
       ready: false,
-
+      shouldPlay: false,
+      playVideo: ()=>{},
+      pauseVideo: ()=>{},
+      mute: ()=>{}
     }
 
 
@@ -83,6 +91,8 @@ export class VideoBackground extends HTMLElement {
     this.compileSources(this.src)
     this.buildDOM();
     this.buildIntersectionObserver();
+
+    this.addEventListener('playCheck', this.handlePlayCheck.bind(this));
 
   }
 
@@ -136,7 +146,6 @@ export class VideoBackground extends HTMLElement {
     }
 
     this.sourceId = getVideoID(this.url, this.type);
-    console.log(`ID = ${this.sourceId}`);
 
     if (this.browserCanAutoPlay  && this.sourceId ) {
       this.player.ready = false
@@ -197,13 +206,15 @@ export class VideoBackground extends HTMLElement {
         this.syncPlayer()
         const readyEvent = new CustomEvent('ready')
         this.container.dispatchEvent(readyEvent)
+        this.container.dispatchEvent(new CustomEvent('playCheck'))
+        this.playerReady = true;
       },
       stateChangeCallback: (state:string, data:number) => {
         switch (state) {
         case 'playing':
           if (!this.videoCanAutoPlay) {
             // The video element begain to auto play.
-            this.logger('video started playing')
+            // this.logger('video started playing')
             this.videoCanAutoPlay = true
             if (this.player) {
               this.player.ready = true
@@ -323,11 +334,12 @@ export class VideoBackground extends HTMLElement {
       this.videoEl.classList.add('vbg__video')
       this.videoEl.classList.add('vbg--loading')
       this.videoEl.setAttribute('playsinline', '');
+      this.videoEl.setAttribute('preload', 'none');
       if (typeof this.poster == 'string') {
         this.videoEl.setAttribute('poster', this.poster);
       }
       if (this.autoplay) {
-        this.videoEl.setAttribute('autoplay', '');
+        // this.videoEl.setAttribute('autoplay', '');
       }
       if (this.loop) {
         this.videoEl.setAttribute('loop', '')
@@ -353,25 +365,60 @@ export class VideoBackground extends HTMLElement {
       })
 
       const self = this;
+      this.playerReady = true;
       this.append(this.videoEl);
+
       this.videoEl.addEventListener('canplay', ()=> {
         self.videoEl?.classList.remove('vbg--loading');
       })
-      if (this.muted) {
-        this.muteVideo()
+
+      this.container.dispatchEvent(new CustomEvent('playCheck'))
+    }
+  }
+
+  handlePlayCheck() {
+    this.logger(`Ready: ${this.playerReady}, intersecting: ${this.isIntersecting}`)
+    if (this.playerReady && this.isIntersecting) {
+
+      if (this.type == 'local' && this.videoEl) {
+        if (this.autoplay) {
+          this.videoEl.setAttribute('autoplay', '');
+          this.videoEl.load();
+          this.videoEl.play();
+        }
+      } else {
+      if (this.player) {
+        this.player.shouldPlay = true;
+        this.player.playVideo();
       }
+      }
+    } else { //Handle shouldn't play
+        if (this.type == 'local' && this.videoEl) {
+          this.videoEl.pause();
+        } else {
+          if (this.player) {
+            this.player.shouldPlay = false;
+            this.player.pauseVideo();
+          }
+        }
+    }
+    if (this.muted) {
+      this.muteVideo()
     }
   }
 
 
-
   muteVideo() {
     this.logger('muting video');
-    const videoToMute = this.querySelector('video');
-    if (videoToMute) {
+    if (this.type == 'local') {
+      const videoToMute = this.querySelector('video');
+      if (videoToMute) {
 
-      videoToMute.volume = 0;
-      videoToMute.muted = true;
+        videoToMute.volume = 0;
+        videoToMute.muted = true;
+      }
+    } else if (this.player) {
+      this.player.mute();
     }
 
   }
@@ -469,8 +516,21 @@ export class VideoBackground extends HTMLElement {
 
   buildIntersectionObserver() {
     const options = {
-      threshold: 0.5
+      threshold: 0.2
     }
+
+    this.observer = new IntersectionObserver(this.handleIntersection.bind(this), options);
+    this.observer.observe(this.container);
+  }
+
+  handleIntersection(entries:IntersectionObserverEntry[],observer:IntersectionObserver) {
+    entries.forEach((entry:IntersectionObserverEntry)=>{
+      if ( entry.target == this.container) {
+        this.logger(`Observing! Intersection found: ${entry.isIntersecting}.`)
+        this.isIntersecting = entry.isIntersecting;
+      }
+    })
+    this.dispatchEvent(new CustomEvent('playCheck'))
   }
 
   get autoplay(): boolean  {
