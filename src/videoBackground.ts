@@ -382,8 +382,10 @@ export class VideoBackground extends HTMLElement {
 
       if (this.type == 'local' && this.videoEl) {
         if (this.autoplay) {
-          this.videoEl.setAttribute('autoplay', '');
-          this.videoEl.load();
+          if (!this.videoEl.paused) {
+            this.videoEl.setAttribute('autoplay', '');
+            this.videoEl.load();
+          }
           this.videoEl.play();
         }
       } else {
