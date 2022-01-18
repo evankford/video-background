@@ -91,7 +91,7 @@ export class VideoBackground extends HTMLElement {
     this.buildOverlay();
     this.buildPoster();
 
-    canAutoPlay.video({timeout: 500, muted:true}).then(({result, error}) => {
+    canAutoPlay.video({timeout: 1200, muted:true}).then(({result, error}) => {
       if (result == false) {
         this.handleFallbackNoVideo();
       } else {
@@ -104,7 +104,7 @@ export class VideoBackground extends HTMLElement {
 
   buildVideo() {
     //Never should have mixed sources.
-    console.log(this.sources);
+
     if (!this.sourcesReady) {
       return false;
     }
@@ -188,7 +188,7 @@ export class VideoBackground extends HTMLElement {
       speed: 1,
       startTime: this.startTime,
       readyCallback: () => {
-        console.log("Ready callback is apparently done")
+
         if (this.player && this.player.iframe) {
           this.player.iframe.classList.add('background-video')
         }
@@ -255,10 +255,10 @@ export class VideoBackground extends HTMLElement {
     }
 
     let scale:number = this.scaleFactor ?? scaleValue;
-    console.log(scale);
+
 
     if (this.mode !== 'fill') {
-      console.log("Easy way out")
+
       playerIframe.style.width = ''
       playerIframe.style.height = ''
       return
