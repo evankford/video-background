@@ -1,11 +1,11 @@
 {
   "name": "@atmtfy/video-background",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Automatic background video from various sources (Youtube, MP4, vimeo) with autoplay across devices. No JS dependencies.",
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -fr dist/* && webpack --config webpack.cjs.js && webpack --config webpack.esnext.js && ./fixup.sh",
+    "build": "rm -fr dist/* && webpack --config webpack.cjs.js && webpack --config webpack.esnext.js",
     "dev": "webpack-cli serve --config webpack.dev.js --mode=development",
     "build:demo": "cp -R dist demo"
   },
@@ -46,11 +46,10 @@
     "webpack-merge": "^5.8.0"
   },
   "exports": {
-    ".": {
-      "import": "./dist/mjs/bundle.js",
-      "require": "./dist/cjs/bundle.js"
-    }
+    "import": "./dist/mjs/bundle.js",
+    "require": "./dist/cjs/bundle.js"
   },
+  "type" : "module",
   "dependencies": {
     "can-autoplay": "^3.0.2",
     "lodash.get": "^4.4.2",
