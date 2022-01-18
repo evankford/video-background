@@ -1,7 +1,6 @@
 {
   "name": "@atmtfy/video-background",
-  "version": "0.0.3",
-  "author" : "Automatify",
+  "version": "0.0.4",
   "description": "Automatic background video from various sources (Youtube, MP4, vimeo) with autoplay across devices. No JS dependencies.",
   "main": "src/index.ts",
   "scripts": {

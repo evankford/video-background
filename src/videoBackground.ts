@@ -45,7 +45,7 @@ export class VideoBackground extends HTMLElement {
 
   constructor() {
     super();
-    console.log("Constructing~!");
+
 
     //Setting up props
     this.sourcesReady = false;
