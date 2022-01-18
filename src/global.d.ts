@@ -1,0 +1,29 @@
+
+type videoStatus = "loading" |  "loaded" |  "buffering" |  "failed" |  "waiting" | "playing"  | "paused" | "error" ;
+type loadingStatus = "loading" | "fallback" | "loaded" |  "buffering" |  "failed" |  "waiting" | "none" | "error" ;
+
+type SourceType = "youtube" | "vimeo" | "local" | "error"
+type FileType = 'webm' | 'ogg' | 'mp4' | 'ogm'
+
+interface SizedSources {
+  [key: string] : LocalSource[]
+}
+
+interface Source {
+  url: string,
+  type: SourceType,
+
+}
+
+interface LocalSource extends Source {
+  maxWidth?: number | false
+  fileType: FileType
+}
+
+type SourcesShape = Array< LocalSource | Source>
+
+interface YoutubeAPIPlayer {
+  ready: boolean,
+  destroy?: function,
+  iframe?: HTMLElement
+}

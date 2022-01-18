@@ -3,11 +3,13 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "src",
+    "noImplicitAny": true,
     "declaration": true,
     "esModuleInterop": true,
     "inlineSourceMap": false,
     "lib": [
-      "esnext"
+      "esnext",
+      "dom"
     ],
     "listEmittedFiles": false,
     "listFiles": false,
@@ -15,7 +17,7 @@
     "noFallthroughCasesInSwitch": true,
     "pretty": true,
     "resolveJsonModule": true,
-    "rootDir": "src",
+    "rootDir": "./src",
     "skipLibCheck": true,
     "strict": true,
     "traceResolution": false,

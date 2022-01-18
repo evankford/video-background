@@ -1,0 +1,88 @@
+:root {
+  --vbg-theme: white;
+  --vbg-bg: black;
+  --vbg-overlay-opacity: 0.5;
+  --vbg-transition-speed: 0.5s;
+  --vbg-preloader-size: 32px;
+}
+
+
+
+video-background {
+  width: 100%;
+  height: 100%;
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  background: var(--vbg-bg);
+  margin: 0;
+  padding: 0;
+
+
+  &[status=loading],&[status=waiting] {
+    &::after {
+      content:'';
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--vbg-preloader-size, 32px);
+      height: var(--vbg-preloader-size, 32px);
+      margin: calc(0px - var(--vbg-preloader-size) * 0.5) 0 0 calc(0px - var(--vbg-preloader-size) * 0.5);
+      border: 4px solid var(--vbg-theme);
+      border-top-color: transparent;
+      z-index: 2;
+      animation: loader-spin 1s infinite ease;
+    }
+  }
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+}
+
+.vbg__controls  {
+  z-index: 6;
+}
+
+.vbg__video , .vbg__poster, .vbg__overlay{
+   position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 50%;
+  transition: opacity var(--vbg-transition-speed) ease;
+}
+
+.vbg__video {
+  z-index: 4;
+}
+.vbg__poster {
+  z-index:  3;
+}
+
+.vbg__overlay  {
+  z-index: 5;
+  background-color: var(--vbg-bg);
+  opacity: var(--vbg-overlay-opacity);
+}
+
+.vbg--loading {
+  opacity: 0;
+}
+
+
+@keyframes loader-spin {
+  100%{transform:rotate(360deg)}
+}
