@@ -6,7 +6,7 @@ module.exports = merge(baseConfig, {
   name: "cjs",
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "dist/cjs"),
+    path: path.resolve(__dirname, "dist/esnext"),
   },
   module: {
     rules: [

@@ -31,11 +31,10 @@ const initializeYouTubeAPI = (win) => {
 const onYouTubePlayerReady = (event, startTime) => {
   const player = event.target;
   player.iframe = player.getIframe();
-  // player.mute();
+  player.mute();
   player.ready = true;
   player.seekTo(startTime < player.getDuration() ? startTime : 0);
   player.playVideo();
-  // console.log(player.playVideo())
 };
 
 /**
@@ -73,11 +72,12 @@ const onYouTubePlayerStateChange = (event, startTime, win, speed = 1) => {
 const initializeYouTubePlayer = ({
   container, win, videoId, startTime, speed, readyCallback, stateChangeCallback
 }) => {
-  let playerElement = getPlayerElement(container)
+  let playerElement = getPlayerElement(container);
 
-
+  console.log(videoId);
   const makePlayer = () => {
     return new win.YT.Player(playerElement, {
+
       videoId: videoId,
       host: "https://www.youtube-nocookie.com",
       playerVars: {
@@ -88,6 +88,7 @@ const initializeYouTubePlayer = ({
         iv_load_policy: 3,
         loop: 0,
         modestbranding: 1,
+        muted: true,
         playsinline: 1,
         rel: 0,
         showinfo: 0,
@@ -96,8 +97,8 @@ const initializeYouTubePlayer = ({
       },
       events: {
         onReady: function (event) {
-          readyCallback(event.target);
           onYouTubePlayerReady(event, startTime);
+          readyCallback(event.target);
         },
         onStateChange: function (event) {
           const state = onYouTubePlayerStateChange(

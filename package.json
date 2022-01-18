@@ -49,7 +49,6 @@
     "import": "./dist/mjs/bundle.js",
     "require": "./dist/cjs/bundle.js"
   },
-  "type" : "module",
   "dependencies": {
     "can-autoplay": "^3.0.2",
     "lodash.get": "^4.4.2",

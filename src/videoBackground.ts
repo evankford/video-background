@@ -25,6 +25,7 @@ export class VideoBackground extends HTMLElement {
     enabled: boolean,
     verbose: boolean,
   };
+
   muteButton?:HTMLElement
   overlayEl?:HTMLElement
   pauseButton?:HTMLElement
@@ -52,7 +53,7 @@ export class VideoBackground extends HTMLElement {
     this.container = this;
     this.browserCanAutoPlay = false;
     this.videoCanAutoPlay = false
-    this.scaleFactor = 1;
+    this.scaleFactor = 1.2;
     this.videoAspectRatio = .69;
     this.player = {
       ready: false,
@@ -113,6 +114,7 @@ export class VideoBackground extends HTMLElement {
       //Check to make sure we have sources
     } else {
       this.initializeVideoAPI();
+      window.addEventListener('resize' , this.syncPlayer.bind(this));
     }
   }
 
@@ -133,9 +135,9 @@ export class VideoBackground extends HTMLElement {
       return
     }
 
-    const id = getVideoID(this.url, this.type);
+    this.sourceId = getVideoID(this.url, this.type);
 
-    if (this.browserCanAutoPlay  && id ) {
+    if (this.browserCanAutoPlay  && this.sourceId ) {
       this.player.ready = false
 
       const sourceAPIFunction = videoSourceModules[this.type].api
@@ -182,7 +184,7 @@ export class VideoBackground extends HTMLElement {
       instance: this,
       container: this,
       win: window,
-      videoId: this.id,
+      videoId: this.sourceId,
       speed: 1,
       startTime: this.startTime,
       readyCallback: () => {
@@ -231,7 +233,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   syncPlayer() {
-    this.scaleVideo(1);
+    this.scaleVideo();
   }
 
   /**
@@ -242,7 +244,7 @@ export class VideoBackground extends HTMLElement {
    * @param {Number} [scaleValue] A multiplier used to increase the scaled size of the media.
    * @return {undefined}
    */
-  scaleVideo(scaleValue = 1) {
+  scaleVideo(scaleValue = 1.3) {
     if (!this.player) {
       return;
     }
@@ -253,8 +255,10 @@ export class VideoBackground extends HTMLElement {
     }
 
     let scale:number = this.scaleFactor ?? scaleValue;
+    console.log(scale);
 
     if (this.mode !== 'fill') {
+      console.log("Easy way out")
       playerIframe.style.width = ''
       playerIframe.style.height = ''
       return
@@ -512,10 +516,10 @@ export class VideoBackground extends HTMLElement {
   }
 
   get mode():"fit"|"fill" {
-    if (this.getAttribute('mode') == 'fill') {
-      return "fill"
+    if (this.getAttribute('mode') == 'fit') {
+      return "fit"
     } else {
-      return "fit";
+      return "fill";
     }
   }
 
