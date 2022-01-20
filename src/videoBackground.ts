@@ -362,6 +362,8 @@ export class VideoBackground extends HTMLElement {
         this.videoEl.setAttribute('muted', '')
       }
 
+      this.videoEl.innerHTML = "";
+
       srcSet.forEach(src=> {
         const child = document.createElement('source');
 
@@ -375,6 +377,8 @@ export class VideoBackground extends HTMLElement {
         })
         this.videoEl?.append(child);
       })
+
+
 
       const self = this;
       this.playerReady = true;
