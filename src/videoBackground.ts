@@ -493,7 +493,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   checkForInherentPoster():HTMLImageElement|false {
-    const inherentPoster = this.container.querySelector<HTMLImageElement>('img[data-poster]')
+    const inherentPoster = this.container.querySelector<HTMLImageElement>('img')
     if (inherentPoster) {
       return inherentPoster;
     }
@@ -513,7 +513,10 @@ export class VideoBackground extends HTMLElement {
       //Found a poster element
       hasInherentPoster = true;
       this.posterEl = inherentPoster;
+      this.container.innerHTML = '';
+      this.container.append(inherentPoster);
     } else {
+      this.container.innerHTML = '';
       //Create a poster element if none found.
       this.posterEl = document.createElement('img');
       this.posterEl.classList.add('vbg--loading')
