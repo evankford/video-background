@@ -113,6 +113,7 @@ export class VideoBackground extends HTMLElement {
 
     canAutoPlay.video({timeout: 1200, muted:true}).then(({result, error}) => {
       if (result == false) {
+        this.logger("Browser autoplay check failed");
         this.handleFallbackNoVideo();
       } else {
         this.browserCanAutoPlay = true;
@@ -361,8 +362,6 @@ export class VideoBackground extends HTMLElement {
         this.videoEl.setAttribute('muted', '')
       }
 
-      this.videoEl.innerHTML = '';
-
       srcSet.forEach(src=> {
         const child = document.createElement('source');
 
@@ -386,6 +385,8 @@ export class VideoBackground extends HTMLElement {
       })
 
       this.container.dispatchEvent(new CustomEvent('playCheck'))
+    } else {
+      this.logger("No source found!")
     }
   }
 
