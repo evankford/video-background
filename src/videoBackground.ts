@@ -111,15 +111,15 @@ export class VideoBackground extends HTMLElement {
     this.buildOverlay();
     this.buildPoster();
 
-    canAutoPlay.video({timeout: 1200, muted:true}).then(({result, error}) => {
-      if (result == false) {
-        this.logger("Browser autoplay check failed");
-        this.handleFallbackNoVideo();
-      } else {
+    // canAutoPlay.video({timeout: 1200, muted:true}).then(({result, error}) => {
+    //   if (result == false) {
+    //     this.logger("Browser autoplay check failed");
+    //     this.handleFallbackNoVideo();
+    //   } else {
         this.browserCanAutoPlay = true;
         this.buildVideo();
-      }
-    })
+      // }
+    // })
     //Check for overlay things.
   }
 
