@@ -69,6 +69,7 @@ export class VideoBackground extends HTMLElement {
     this.playerReady = false;
     this.isIntersecting = false;
     this.canUnmute = false;
+    this.muted = true;
     this.player = {
       ready: false,
       shouldPlay: false,
@@ -343,7 +344,9 @@ export class VideoBackground extends HTMLElement {
       this.videoEl.classList.add('vbg__video')
       this.videoEl.classList.add('vbg--loading')
       this.videoEl.setAttribute('playsinline', '');
-      this.videoEl.setAttribute('preload', 'none');
+      this.videoEl.setAttribute('preload', 'metadata');
+      this.videoEl.setAttribute('muted', '');
+
       if (typeof this.poster == 'string') {
         this.videoEl.setAttribute('poster', this.poster);
       }
@@ -388,7 +391,7 @@ export class VideoBackground extends HTMLElement {
   handlePlayCheck() {
     this.logger(`Ready: ${this.playerReady}, intersecting: ${this.isIntersecting}`)
     if (this.playerReady && this.isIntersecting) {
-
+    this.status = 'playing';
       if (this.type == 'local' && this.videoEl) {
         if (this.autoplay) {
           if (!this.videoEl.currentTime || this.videoEl.currentTime <= 1) {
@@ -405,6 +408,7 @@ export class VideoBackground extends HTMLElement {
       }
       }
     } else { //Handle shouldn't play
+      this.status = 'paused';
         if (this.type == 'local' && this.videoEl) {
           this.videoEl.pause();
         } else {
@@ -623,7 +627,7 @@ export class VideoBackground extends HTMLElement {
 
   get status():loadingStatus {
     const statusString = this.getAttribute('status');
-    if (typeof statusString == 'string' && (statusString == "loading" || statusString == "fallback" || statusString == "loaded" || statusString == "buffering" ||  statusString ==  "failed" ||  statusString ==  "waiting" || statusString ==  "none" || statusString == "error")) {
+    if (typeof statusString == 'string' && (statusString == "loading" || statusString == "playing" || statusString == "paused" || statusString == "fallback" || statusString == "loaded" || statusString == "buffering" ||  statusString ==  "failed" ||  statusString ==  "waiting" || statusString ==  "none" || statusString == "error")) {
       return statusString;
     } else {
       this.status = "none";

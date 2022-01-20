@@ -1,6 +1,6 @@
 
 type videoStatus = "loading" |  "loaded" |  "buffering" |  "failed" |  "waiting" | "playing"  | "paused" | "error" ;
-type loadingStatus = "loading" | "fallback" | "loaded" |  "buffering" |  "failed" |  "waiting" | "none" | "error" ;
+type loadingStatus = "loading" | "fallback" | "loaded" |  "buffering" |  "failed" |  "waiting" | "none" | "error" | "paused" | "playing";
 
 type SourceType = "youtube" | "vimeo" | "local" | "error"
 type FileType = 'webm' | 'ogg' | 'mp4' | 'ogm'
