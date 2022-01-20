@@ -514,7 +514,6 @@ export class VideoBackground extends HTMLElement {
       hasInherentPoster = true;
       this.posterEl = inherentPoster;
       this.container.innerHTML = '';
-      this.container.append(inherentPoster);
     } else {
       this.container.innerHTML = '';
       //Create a poster element if none found.
@@ -542,9 +541,7 @@ export class VideoBackground extends HTMLElement {
       this.posterEl.sizes = this.size || "100vw";
     }
 
-    if (!inherentPoster) {
       this.appendChild(this.posterEl);
-    }
   }
 
 
