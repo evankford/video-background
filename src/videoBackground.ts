@@ -485,7 +485,6 @@ export class VideoBackground extends HTMLElement {
     let breakpointsWithPresent = [...this.breakpoints, wW].sort((a, b) => a - b)
     const pastIndex = breakpointsWithPast.indexOf(this.widthStore);
     const currentIndex = breakpointsWithPresent.indexOf(wW);
-    this.logger(`comparing past breakpoint of ${this.widthStore} with current of ${wW}. Are we good? The past one was ${pastIndex} and currently it's ${currentIndex}`)
 
     if (pastIndex != currentIndex) {
       this.buildLocalVideo();
@@ -509,8 +508,9 @@ export class VideoBackground extends HTMLElement {
     let hasInherentPoster = false
     //Gets a poster image element that's a child of the video-background element
     const inherentPoster  = this.checkForInherentPoster();
+    this.logger(`Hello, looking for an inherent image. The result is ${inherentPoster}.`)
     if (inherentPoster != false) {
-      this.logger("Found an inherent poster")
+      this.logger("Found an inherent poster");
       //Found a poster element
       hasInherentPoster = true;
       this.posterEl = inherentPoster;
