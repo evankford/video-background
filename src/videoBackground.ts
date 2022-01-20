@@ -391,11 +391,12 @@ export class VideoBackground extends HTMLElement {
 
       if (this.type == 'local' && this.videoEl) {
         if (this.autoplay) {
-          if (!this.videoEl.paused) {
+          if (!this.videoEl.currentTime || this.videoEl.currentTime <= 1) {
             this.videoEl.setAttribute('autoplay', '');
             this.videoEl.load();
+          } else {
+            this.videoEl.play();
           }
-          this.videoEl.play();
         }
       } else {
       if (this.player) {
