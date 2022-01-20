@@ -1,6 +1,6 @@
 {
   "name": "@atmtfy/video-background",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Automatic background video from various sources (Youtube, MP4, vimeo) with autoplay across devices. No JS dependencies.",
   "main": "src/index.ts",
   "scripts": {
@@ -46,8 +46,10 @@
     "webpack-merge": "^5.8.0"
   },
   "exports": {
-    "import": "./dist/mjs/bundle.js",
-    "require": "./dist/cjs/bundle.js"
+    "." : {
+      "import": "./dist/mjs/bundle.js",
+      "require": "./dist/cjs/bundle.js"
+    }
   },
   "dependencies": {
     "can-autoplay": "^3.0.2",
