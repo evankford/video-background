@@ -502,13 +502,13 @@ export class VideoBackground extends HTMLElement {
   }
 
   buildPoster() {
-    if (!this.posterSet && !this.poster) {
-      return false;
-    }
 
     let hasInherentPoster = false
     //Gets a poster image element that's a child of the video-background element
     const inherentPoster  = this.checkForInherentPoster();
+    if (!this.posterSet && !this.poster && !inherentPoster) {
+      return false;
+    }
     this.logger(`Hello, looking for an inherent image. The result is ${inherentPoster}.`)
     if (inherentPoster != false) {
       this.logger("Found an inherent poster");
