@@ -1,12 +1,18 @@
+/**
+ * @class VideoBackground creates a custom web component
+ * @todo separate statuses and capabilities and stores into their own objects
+ * @todo allow unmuting
+ */
 export declare class VideoBackground extends HTMLElement {
-    breakpoints?: number[];
-    browserCanAutoPlay: boolean;
+    breakpoints?: number[]; /** Contains an array of breakpoints to reload smaller sources when passed */
+    browserCanAutoPlay: boolean; /** Dynamically checks when  */
     container: HTMLElement;
     debug: {
         enabled: boolean;
         verbose: boolean;
     };
     observer?: IntersectionObserver;
+    canUnmute: boolean;
     muteButton?: HTMLElement;
     overlayEl?: HTMLElement;
     pauseButton?: HTMLElement;
@@ -62,6 +68,7 @@ export declare class VideoBackground extends HTMLElement {
     muteVideo(): void;
     getSourcesFilteredBySize(sources: SourcesShape): SourcesShape;
     checkIfPassedBreakpoints(): void;
+    checkForInherentPoster(): HTMLImageElement | false;
     buildPoster(): false | undefined;
     buildOverlay(): void;
     buildIntersectionObserver(): void;
