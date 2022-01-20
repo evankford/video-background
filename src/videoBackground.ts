@@ -5,7 +5,9 @@ import { initializeVimeoAPI, initializeVimeoPlayer } from './utils/vimeo';
 import { initializeYouTubeAPI, initializeYouTubePlayer } from './utils/youtube';
 import { findPlayerAspectRatio, getStartTime, getVideoID, getVideoSource } from './utils/utils'
 
-
+/**
+ * Object for choosing the correct video initializer.
+ */
 const videoSourceModules = {
   vimeo: {
     api: initializeVimeoAPI,
@@ -17,16 +19,22 @@ const videoSourceModules = {
   }
 }
 
+
+/**
+ * @class VideoBackground creates a custom web component
+ * @todo separate statuses and capabilities and stores into their own objects
+ * @todo allow unmuting
+ */
 export class VideoBackground extends HTMLElement {
-  breakpoints?:number[]
-  browserCanAutoPlay: boolean
+  breakpoints?:number[] /** Contains an array of breakpoints to reload smaller sources when passed */
+  browserCanAutoPlay: boolean /** Dynamically checks when  */
   container : HTMLElement
   debug: {
     enabled: boolean,
     verbose: boolean,
   };
   observer?: IntersectionObserver
-
+  canUnmute: boolean;
   muteButton?:HTMLElement
   overlayEl?:HTMLElement
   pauseButton?:HTMLElement
@@ -60,6 +68,7 @@ export class VideoBackground extends HTMLElement {
     this.videoAspectRatio = .69;
     this.playerReady = false;
     this.isIntersecting = false;
+    this.canUnmute = false;
     this.player = {
       ready: false,
       shouldPlay: false,
@@ -478,18 +487,37 @@ export class VideoBackground extends HTMLElement {
     }
   }
 
+  checkForInherentPoster():HTMLImageElement|false {
+    const inherentPoster = this.container.querySelector<HTMLImageElement>('img[data-poster]')
+    if (inherentPoster) {
+      return inherentPoster;
+    }
+
+    return false;
+  }
 
   buildPoster() {
     if (!this.posterSet && !this.poster) {
       return false;
     }
 
-    this.posterEl = document.createElement('img');
+    let hasInherentPoster = false
+    //Gets a poster image element that's a child of the video-background element
+    const inherentPoster  = this.checkForInherentPoster();
+    if (inherentPoster != false) {
+      //Found a poster element
+      hasInherentPoster = true;
+      this.posterEl = inherentPoster;
+    } else {
+      //Create a poster element if none found.
+      this.posterEl = document.createElement('img');
+      this.posterEl.classList.add('vbg--loading')
+    }
 
+    //Add styling classes;
     this.posterEl.classList.add('vbg__poster')
-    this.posterEl.classList.add('vbg--loading')
 
-
+    //Using data on the videobackground
     if (this.poster) {
       const self = this;
       const imageLoaderEl = new Image();
@@ -506,7 +534,9 @@ export class VideoBackground extends HTMLElement {
       this.posterEl.sizes = this.size || "100vw";
     }
 
-    this.appendChild(this.posterEl);
+    if (!inherentPoster) {
+      this.appendChild(this.posterEl);
+    }
   }
 
 
