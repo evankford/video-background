@@ -140,6 +140,7 @@ export class VideoBackground extends HTMLElement {
 
 
   handleFallbackNoVideo() {
+    this.status = "fallback";
     this.logger("Video Won't play, defaulting to fallback")
     this.status = "fallback";
   }
@@ -554,7 +555,7 @@ export class VideoBackground extends HTMLElement {
 
   buildIntersectionObserver() {
     const options = {
-      threshold: 0.2
+      threshold: 0.3
     }
 
     this.observer = new IntersectionObserver(this.handleIntersection.bind(this), options);
