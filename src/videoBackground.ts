@@ -5,6 +5,10 @@ import { initializeYouTubeAPI, initializeYouTubePlayer } from './utils/youtube';
 import { findPlayerAspectRatio, getStartTime, getVideoID, getVideoSource } from './utils/utils'
 import Icons from './utils/icons';
 
+ var
+    is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
+    is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+
 /**
  * Object for choosing the correct video initializer.
  */
@@ -74,7 +78,11 @@ export class VideoBackground extends HTMLElement {
     this.playerReady = false;
     this.isIntersecting = false;
     this.can = { unmute: this.hasAttribute('can-unmute'), pause:  this.hasAttribute('can-pause')};
-    this.muted = true;
+    this.muted = this.getAttribute('muted') !== 'false';
+
+    if (is_ios && is_safari) {
+      this.muted = true;
+    }
     this.paused = false;
     this.player = {
       ready: false,
