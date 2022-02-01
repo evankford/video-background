@@ -1,9 +1,9 @@
 import { YOUTUBE_REGEX, VIMEO_REGEX } from 'constants/instance';
-import canAutoPlay from 'can-autoplay';
 
 import { initializeVimeoAPI, initializeVimeoPlayer } from './utils/vimeo';
 import { initializeYouTubeAPI, initializeYouTubePlayer } from './utils/youtube';
 import { findPlayerAspectRatio, getStartTime, getVideoID, getVideoSource } from './utils/utils'
+import Icons from './utils/icons';
 
 /**
  * Object for choosing the correct video initializer.
@@ -33,19 +33,22 @@ export class VideoBackground extends HTMLElement {
     enabled: boolean,
     verbose: boolean,
   };
+  can: VideoCan
   observer?: IntersectionObserver
-  canUnmute: boolean;
   muteButton?:HTMLElement
   overlayEl?:HTMLElement
   pauseButton?:HTMLElement
   player?: YoutubeAPIPlayer
   playerReady: boolean;
   isIntersecting: boolean;
+  icons?: Icons
+  paused: boolean
   posterEl?:HTMLImageElement
   scaleFactor: number
   size?: string
   startTime?:number
   sourceId?:string
+  hasStarted: boolean;
   sources?: SourcesShape
   sourcesReady: boolean
   type?: 'local' | 'youtube' | 'vimeo' | 'error'
@@ -66,17 +69,21 @@ export class VideoBackground extends HTMLElement {
     this.videoCanAutoPlay = false
     this.scaleFactor = 1.2;
     this.videoAspectRatio = .69;
+    this.hasStarted = false;
     this.playerReady = false;
     this.isIntersecting = false;
-    this.canUnmute = false;
+    this.can = { unmute: this.hasAttribute('can-unmute'), pause:  this.hasAttribute('can-pause')};
     this.muted = true;
+    this.paused = false;
     this.player = {
       ready: false,
       shouldPlay: false,
       playVideo: ()=>{},
       pauseVideo: ()=>{},
-      mute: ()=>{}
+      mute: ()=>{},
+      unmute: ()=> {},
     }
+
 
 
     //Setting up debug
@@ -91,6 +98,7 @@ export class VideoBackground extends HTMLElement {
       this.debug = {enabled : false, verbose: false}
     }
     this.logger("Debugging video-background.");
+    this.logger(this)
     this.init();
   }
 
@@ -121,6 +129,14 @@ export class VideoBackground extends HTMLElement {
       // }
     // })
     //Check for overlay things.
+    this.buildIcons();
+  }
+
+  buildIcons() {
+    console.log(this.can);
+    if (this.can.unmute || this.can.pause) {
+      this.icons = new Icons({wrapper: this,can: this.can, onMuteUnmute: this.toggleMute.bind(this), onPausePlay: this.togglePause.bind(this) , initialState: { muted: this.muted, paused: false}})
+    }
   }
 
   buildVideo() {
@@ -224,6 +240,8 @@ export class VideoBackground extends HTMLElement {
       stateChangeCallback: (state:string, data:number) => {
         switch (state) {
         case 'playing':
+          this.status = 'playing';
+          this.syncPlayer();
           if (!this.videoCanAutoPlay) {
             // The video element begain to auto play.
             // this.logger('video started playing')
@@ -239,7 +257,7 @@ export class VideoBackground extends HTMLElement {
           break
         }
         if (state) {
-          this.logger(state)
+          // this.logger(state)
         }
         if (data) {
           this.logger(data.toString())
@@ -347,13 +365,13 @@ export class VideoBackground extends HTMLElement {
       this.videoEl.classList.add('vbg--loading')
       this.videoEl.setAttribute('playsinline', '');
       this.videoEl.setAttribute('preload', 'metadata');
-      this.videoEl.setAttribute('muted', '');
+      this.videoEl.setAttribute('muted', "true");
 
       if (typeof this.poster == 'string') {
         this.videoEl.setAttribute('poster', this.poster);
       }
       if (this.autoplay) {
-        // this.videoEl.setAttribute('autoplay', '');
+        this.videoEl.setAttribute('autoplay', 'false');
       }
       if (this.loop) {
         this.videoEl.setAttribute('loop', '')
@@ -396,11 +414,12 @@ export class VideoBackground extends HTMLElement {
 
   handlePlayCheck() {
     this.logger(`Ready: ${this.playerReady}, intersecting: ${this.isIntersecting}`)
+    if (this.type == 'local' && this.videoEl) {
     if (this.playerReady && this.isIntersecting) {
-    this.status = 'playing';
-      if (this.type == 'local' && this.videoEl) {
+      this.status = 'playing';
+      this.hasStarted = true;
         if (this.autoplay) {
-          if (!this.videoEl.currentTime || this.videoEl.currentTime <= 1) {
+          if (!this.videoEl.currentTime || this.videoEl.currentTime <= 0.1) {
             this.videoEl.setAttribute('autoplay', '');
             this.videoEl.load();
           } else {
@@ -408,25 +427,73 @@ export class VideoBackground extends HTMLElement {
           }
         }
       } else {
-      if (this.player) {
-        this.player.shouldPlay = true;
-        this.player.playVideo();
-      }
+        this.videoEl.pause();
       }
     } else { //Handle shouldn't play
-      this.status = 'paused';
-        if (this.type == 'local' && this.videoEl) {
-          this.videoEl.pause();
+
+       if (this.isIntersecting) {
+          this.setPlayerReady(true);
+          this.status = this.hasStarted ? 'paused' : 'waiting';
+          // this.player.playVideo();
+
+
         } else {
-          if (this.player) {
-            this.player.shouldPlay = false;
-            this.player.pauseVideo();
+            this.setPlayerReady(false)
           }
         }
-    }
     if (this.muted) {
       this.muteVideo()
     }
+  }
+
+  setPlayerReady(isReady = true) {
+    const self = this;
+    if (!this.player) {
+       setTimeout(() => {
+        self.setPlayerReady();
+      }, 500);;
+      return
+    }
+
+    this.player.shouldPlay = isReady;
+    if (this.player) {
+      if (isReady) {
+        this.player.playVideo();
+
+
+      }else {
+        this.player.pauseVideo()
+      }
+    }
+    if (this.player?.iframe) {
+      this.player.iframe.setAttribute('data-should-play', isReady.toString())
+    }
+  }
+
+  toggleMute() {
+    if (this.muted) {
+      this.unmuteVideo()
+    } else {
+      this.muteVideo();
+    }
+    this.muted = !this.muted;
+  }
+
+  togglePause() {
+    if (this.paused) {
+      if (this.type == 'local' && this.videoEl) {
+        this.videoEl.play();
+      } else if (this.player) {
+        this.player.playVideo();
+      }
+    } else {
+      if (this.type == 'local' && this.videoEl) {
+        this.videoEl.pause();
+      } else if (this.player) {
+        this.player.pauseVideo();
+      }
+    }
+    this.paused = !this.paused;
   }
 
 
@@ -441,6 +508,19 @@ export class VideoBackground extends HTMLElement {
       }
     } else if (this.player) {
       this.player.mute();
+    }
+
+  }
+  unmuteVideo() {
+    this.logger('unmuting video');
+    if (this.type == 'local') {
+      const videoToMute = this.querySelector('video');
+      if (videoToMute) {
+        videoToMute.volume = 0.7;
+        videoToMute.muted = false;
+      }
+    } else if (this.player) {
+      this.player.unmute();
     }
 
   }
@@ -876,7 +956,7 @@ export class VideoBackground extends HTMLElement {
    * @param always Whether to always show if not verbose
    * @return {undefined}
    */
-  logger(msg: string, always:boolean = false) {
+  logger(msg: any, always:boolean = false) {
     if (always && this.debug.enabled) {
       console.log(msg);
     } else {

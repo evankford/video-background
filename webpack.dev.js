@@ -26,7 +26,7 @@ module.exports = merge(baseConfig, {
         options: {
           configFile: path.resolve(__dirname, "./tsconfig-dev.json"),
         },
-      },
+      }
     ],
   },
   devServer: {
@@ -37,7 +37,6 @@ module.exports = merge(baseConfig, {
     allowedHosts: ["youtube-nocookie.com", "youtube.com"],
     devMiddleware: {
       index: true,
-      // writeToDisk: true,
       publicPath: "/dist",
     },
     hot: true,

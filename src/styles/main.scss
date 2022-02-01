@@ -4,6 +4,11 @@
   --vbg-overlay-opacity: 0.5;
   --vbg-transition-speed: 0.5s;
   --vbg-preloader-size: 32px;
+  --vbg-icon-size: 34px;
+  --vbg-icon-size-small: 28px;
+  --vbg-icon-spacing-modifier: 0.1;
+  --vbg-icon-space-around: 20px;
+  --vbg-icon-space-around-small: 12px;
 }
 
 
@@ -21,6 +26,7 @@ video-background {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  color: white;
 
 
   &[status=loading],&[status=waiting] {
@@ -37,6 +43,9 @@ video-background {
       border-top-color: transparent;
       z-index: 2;
       animation: loader-spin 1s infinite ease;
+    }
+    iframe {
+      opacity: 0;
     }
   }
   iframe {
@@ -82,6 +91,48 @@ video-background {
 
 .vbg--loading {
   opacity: 0;
+}
+
+.vbg__icons {
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  left: 0;
+  padding: var(--vbg-icon-space-around);
+  width: auto;
+  height: auto;
+  max-width: 40%;
+
+  @media (max-width: 720px) {
+
+    padding: var(--vbg-icon-space-around-small);
+  }
+}
+
+.vbg__icon {
+  background: transparent;
+  appearance:  none;
+  border: none;
+  --size: var(--vbg-icon-size, 24px);
+  position: relative;
+  width: var(--size);
+  padding: calc(var(--vbg-icon-spacing-modifier) * var(--size));
+  margin: calc(var(--vbg-icon-spacing-modifier) * var(--size));
+  transition: opacity 150ms ease, transform 150ms ease;
+  opacity: 0.5;
+  &:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+  @media (max-width: 720px) {
+    --size: var(var(--vbg-icon-size-small), 20px)
+  }
+  svg {
+    color: var(--vbg-icon-color, white);
+  }
+  path, rect {
+    fill: currentColor !important;
+  }
 }
 
 

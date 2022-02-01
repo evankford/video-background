@@ -30,4 +30,15 @@ interface YoutubeAPIPlayer {
   playVideo: function,
   pauseVideo: function,
   mute: function
+  unmute: function
+}
+
+type VideoCan = {
+  unmute: boolean,
+  pause: boolean
+}
+
+declare module "*.svg" {
+  const content: any;
+  export default content;
 }

@@ -42,10 +42,31 @@ const onYouTubePlayerReady = (event, startTime) => {
   }
 };
 
+let playLoopChecker = 0;
+let playCheckerI = 0
+let playCheckerMax = 20
+function checkPlayLoop(playerParent)  {
+  const player = getPlayerElement(playerParent);
+  playLoopChecker = setInterval(() => {
+    playCheckerI++;
+    if (player.shouldPlay === true || player.iframe && this.player.iframe.getAttribute('data-should-play') == true) {
+      player.play();
+      playCheckerI = 0;
+      window.clearInterval(playLoopChecker);
+      playLoopChecker = 0;
+      return true;
+    } else if (playCheckerI >= 20) {
+      playCheckerI = 0;
+      window.clearInterval(playLoopChecker);
+      playLoopChecker = 0;
+      return false;
+    }
+  }, 500);
+}
 /**
  * YouTube event handler. Determine whether or not to loop the video.
  */
-const onYouTubePlayerStateChange = (event, startTime, win, speed = 1) => {
+const onYouTubePlayerStateChange = (event, startTime, win, speed = 1, container) => {
   const player = event.target;
   const duration = (player.getDuration() - startTime) / speed;
 
@@ -61,8 +82,11 @@ const onYouTubePlayerStateChange = (event, startTime, win, speed = 1) => {
     }
     requestAnimationFrame(doLoop);
   };
+  const tryToPlay = () => {
+    player.playVideo();
+  }
 
-  if (event.data === win.YT.PlayerState.BUFFERING &&
+ if (event.data === win.YT.PlayerState.BUFFERING &&
      (player.getVideoLoadedFraction() !== 1) &&
      (player.getCurrentTime() === 0 || player.getCurrentTime() > duration - -0.1)) {
     return 'buffering';
@@ -81,6 +105,10 @@ const onYouTubePlayerStateChange = (event, startTime, win, speed = 1) => {
     } else {
       player.pauseVideo();
     }
+    return "ENDED";
+  } else {
+    checkPlayLoop(container);
+    return event.data;
   }
 };
 
@@ -121,7 +149,8 @@ const initializeYouTubePlayer = ({
             event,
             startTime,
             win,
-            speed
+            speed,
+            container
           );
 
           stateChangeCallback(state, state);

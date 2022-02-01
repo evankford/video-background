@@ -1,3 +1,4 @@
+import Icons from './utils/icons';
 /**
  * @class VideoBackground creates a custom web component
  * @todo separate statuses and capabilities and stores into their own objects
@@ -11,19 +12,22 @@ export declare class VideoBackground extends HTMLElement {
         enabled: boolean;
         verbose: boolean;
     };
+    can: VideoCan;
     observer?: IntersectionObserver;
-    canUnmute: boolean;
     muteButton?: HTMLElement;
     overlayEl?: HTMLElement;
     pauseButton?: HTMLElement;
     player?: YoutubeAPIPlayer;
     playerReady: boolean;
     isIntersecting: boolean;
+    icons?: Icons;
+    paused: boolean;
     posterEl?: HTMLImageElement;
     scaleFactor: number;
     size?: string;
     startTime?: number;
     sourceId?: string;
+    hasStarted: boolean;
     sources?: SourcesShape;
     sourcesReady: boolean;
     type?: 'local' | 'youtube' | 'vimeo' | 'error';
@@ -35,6 +39,7 @@ export declare class VideoBackground extends HTMLElement {
     constructor();
     init(): void;
     buildDOM(): void;
+    buildIcons(): void;
     buildVideo(): false | undefined;
     handleFallbackNoVideo(): void;
     /**
@@ -65,7 +70,11 @@ export declare class VideoBackground extends HTMLElement {
      */
     buildLocalVideo(): void;
     handlePlayCheck(): void;
+    setPlayerReady(isReady?: boolean): void;
+    toggleMute(): void;
+    togglePause(): void;
     muteVideo(): void;
+    unmuteVideo(): void;
     getSourcesFilteredBySize(sources: SourcesShape): SourcesShape;
     checkIfPassedBreakpoints(): void;
     checkForInherentPoster(): HTMLImageElement | false;
@@ -108,5 +117,5 @@ export declare class VideoBackground extends HTMLElement {
      * @param always Whether to always show if not verbose
      * @return {undefined}
      */
-    logger(msg: string, always?: boolean): void;
+    logger(msg: any, always?: boolean): void;
 }

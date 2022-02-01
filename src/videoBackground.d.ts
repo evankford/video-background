@@ -1,31 +1,44 @@
+import Icons from './utils/icons';
+/**
+ * @class VideoBackground creates a custom web component
+ * @todo separate statuses and capabilities and stores into their own objects
+ * @todo allow unmuting
+ */
 export declare class VideoBackground extends HTMLElement {
-    breakpoints?: number[];
-    browserCanAutoPlay: boolean;
+    breakpoints?: number[]; /** Contains an array of breakpoints to reload smaller sources when passed */
+    browserCanAutoPlay: boolean; /** Dynamically checks when  */
     container: HTMLElement;
     debug: {
         enabled: boolean;
         verbose: boolean;
     };
+    can: VideoCan;
+    observer?: IntersectionObserver;
     muteButton?: HTMLElement;
     overlayEl?: HTMLElement;
     pauseButton?: HTMLElement;
     player?: YoutubeAPIPlayer;
+    playerReady: boolean;
+    isIntersecting: boolean;
+    icons?: Icons;
     posterEl?: HTMLImageElement;
     scaleFactor: number;
     size?: string;
     startTime?: number;
     sourceId?: string;
+    hasStarted: boolean;
     sources?: SourcesShape;
     sourcesReady: boolean;
     type?: 'local' | 'youtube' | 'vimeo' | 'error';
     url?: string;
     videoAspectRatio: number;
     videoCanAutoPlay: boolean;
-    videoEl?: HTMLElement;
+    videoEl?: HTMLVideoElement;
     widthStore?: number;
     constructor();
     init(): void;
     buildDOM(): void;
+    buildIcons(): void;
     buildVideo(): false | undefined;
     handleFallbackNoVideo(): void;
     /**
@@ -55,12 +68,18 @@ export declare class VideoBackground extends HTMLElement {
      * @returns {undefined}
      */
     buildLocalVideo(): void;
+    handlePlayCheck(): void;
+    setPlayerReady(isReady?: boolean): void;
+    toggleMute(): void;
+    togglePause(): void;
     muteVideo(): void;
     getSourcesFilteredBySize(sources: SourcesShape): SourcesShape;
     checkIfPassedBreakpoints(): void;
+    checkForInherentPoster(): HTMLImageElement | false;
     buildPoster(): false | undefined;
     buildOverlay(): void;
     buildIntersectionObserver(): void;
+    handleIntersection(entries: IntersectionObserverEntry[], observer: IntersectionObserver): void;
     get autoplay(): boolean;
     get loop(): boolean;
     get muted(): boolean;
@@ -96,5 +115,5 @@ export declare class VideoBackground extends HTMLElement {
      * @param always Whether to always show if not verbose
      * @return {undefined}
      */
-    logger(msg: string, always?: boolean): void;
+    logger(msg: any, always?: boolean): void;
 }
