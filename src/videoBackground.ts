@@ -43,6 +43,7 @@ export class VideoBackground extends HTMLElement {
   isIntersecting: boolean;
   icons?: Icons
   paused: boolean
+  muted: boolean
   posterEl?:HTMLImageElement
   scaleFactor: number
   size?: string
@@ -471,12 +472,14 @@ export class VideoBackground extends HTMLElement {
   }
 
   toggleMute() {
-    if (this.muted) {
+    console.log("Toggling mute:" + this.muted)
+    if (this.muted == true) {
       this.unmuteVideo()
+      this.muted = false;
     } else {
       this.muteVideo();
+      this.muted = true;
     }
-    this.muted = !this.muted;
   }
 
   togglePause() {
@@ -513,11 +516,12 @@ export class VideoBackground extends HTMLElement {
   }
   unmuteVideo() {
     this.logger('unmuting video');
-    if (this.type == 'local') {
+    if (this.type == 'local' && this.videoEl) {
       const videoToMute = this.querySelector('video');
       if (videoToMute) {
         videoToMute.volume = 0.7;
         videoToMute.muted = false;
+
       }
     } else if (this.player) {
       this.player.unmute();
@@ -669,12 +673,6 @@ export class VideoBackground extends HTMLElement {
     }
     return false;
   }
-  get muted(): boolean  {
-    if (this.getAttribute('muted') != 'false') {
-      return true
-    }
-    return false;
-  }
 
   set autoplay(isAutoplay:boolean) {
     if (isAutoplay) {
@@ -684,13 +682,6 @@ export class VideoBackground extends HTMLElement {
     }
   }
 
-  set muted(isMuted:boolean) {
-    if (isMuted) {
-      this.setAttribute('muted', '');
-    } else {
-      this.removeAttribute('muted');
-    }
-  }
 
   set loop(isLoop:boolean) {
     if (isLoop) {

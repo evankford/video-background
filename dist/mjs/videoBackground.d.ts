@@ -22,6 +22,7 @@ export declare class VideoBackground extends HTMLElement {
     isIntersecting: boolean;
     icons?: Icons;
     paused: boolean;
+    muted: boolean;
     posterEl?: HTMLImageElement;
     scaleFactor: number;
     size?: string;
@@ -84,9 +85,7 @@ export declare class VideoBackground extends HTMLElement {
     handleIntersection(entries: IntersectionObserverEntry[], observer: IntersectionObserver): void;
     get autoplay(): boolean;
     get loop(): boolean;
-    get muted(): boolean;
     set autoplay(isAutoplay: boolean);
-    set muted(isMuted: boolean);
     set loop(isLoop: boolean);
     get mode(): "fit" | "fill";
     set mode(fitOrFill: "fit" | "fill");

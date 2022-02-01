@@ -106,7 +106,6 @@ export default class Icons {
   }
 
   syncMuteState() {
-    console.log(play)
     if (!this.muteUnmute) {
       console.error('Sometthing went wrong: Trying to sync mute button before button exists');
       return;
