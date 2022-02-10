@@ -51,7 +51,7 @@ export class VideoBackground extends HTMLElement {
   icons?: Icons
   paused: boolean
   muted: boolean
-  posterEl?:HTMLImageElement
+  posterEl?:HTMLImageElement|HTMLPictureElement
   scaleFactor: number
   size?: string
   startTime?:number
@@ -643,27 +643,27 @@ export class VideoBackground extends HTMLElement {
       //Create a poster element if none found.
       this.posterEl = document.createElement('img');
       this.posterEl.classList.add('vbg--loading')
+      if (this.poster && 'src' in this.posterEl) {
+          const self = this;
+          const imageLoaderEl = new Image();
+          imageLoaderEl.src = this.poster;
+
+          imageLoaderEl.addEventListener('load', function() {
+            if (self && self.posterEl && 'src' in self.posterEl) {
+              self.posterEl.src = imageLoaderEl.src;
+              self.posterEl.classList.remove('vbg--loading')
+            }
+          })
+        }
+        if (this.posterSet && 'srcset' in this.posterEl) {
+          this.posterEl.srcset = this.posterSet;
+          this.posterEl.sizes = this.size || "100vw";
+        }
     }
 
     //Add styling classes;
     this.posterEl.classList.add('vbg__poster')
 
-    //Using data on the videobackground
-    if (this.poster) {
-      const self = this;
-      const imageLoaderEl = new Image();
-      imageLoaderEl.src = this.poster;
-      imageLoaderEl.addEventListener('load', function() {
-        if (self && self.posterEl) {
-          self.posterEl.src = imageLoaderEl.src;
-          self.posterEl.classList.remove('vbg--loading')
-        }
-      })
-    }
-    if (this.posterSet) {
-      this.posterEl.srcset = this.posterSet;
-      this.posterEl.sizes = this.size || "100vw";
-    }
 
       this.appendChild(this.posterEl);
   }
