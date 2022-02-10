@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import Icons from './utils/icons';
 import Player from "@vimeo/player";
 /**
@@ -18,11 +19,13 @@ export declare class VideoBackground extends HTMLElement {
     observer?: IntersectionObserver;
     muteButton?: HTMLElement;
     overlayEl?: HTMLElement;
+    oldSize?: number;
     pauseButton?: HTMLElement;
     player?: YoutubeAPIPlayer | Player;
     playerReady: boolean;
     isIntersecting: boolean;
     icons?: Icons;
+    playerReadyTimeout?: NodeJS.Timeout;
     paused: boolean;
     muted: boolean;
     posterEl?: HTMLImageElement | HTMLPictureElement;

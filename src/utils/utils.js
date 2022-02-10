@@ -1,5 +1,6 @@
 import { DEFAULT_PROPERTY_VALUES, UNSUPPORTED_VIDEO_SOURCE, YOUTUBE_REGEX, VIMEO_REGEX } from '../constants/instance.js'
 import parseUrl from 'url-parse'
+import Player from '@vimeo/player'
 
 /**
  * The YouTube API seemingly does not expose the actual width and height dimensions
@@ -10,9 +11,9 @@ import parseUrl from 'url-parse'
  *
  * @method getYouTubeDimensions Get the dimensions of the video itself
  * @param {Object} Player
- * @return {Object} The width and height as integers or undefined
+ * @return {Promise<Object>} The width and height as integers or undefined
  */
-const getYouTubeDimensions = player => {
+const getYouTubeDimensions = async player => {
   let w
   let h
   for (let p in player) {
@@ -29,19 +30,22 @@ const getYouTubeDimensions = player => {
 /**
  * @method getVimeoDimensions Get the dimensions of the video itself
  * @param {Object} Player
- * @return {Object} The width and height as integers or undefined
+ * @return {Promise<Object>} The width and height as integers or undefined
  */
-const getVimeoDimensions = player => {
+const getVimeoDimensions = async player => {
   let w
   let h
-  if (player.dimensions) {
-    w = player.dimensions.width
-    h = player.dimensions.height
-  } else if (player.iframe) {
-    w = player.iframe.clientWidth
+  const dimensions = await Promise.all([player.getVideoWidth(), player.getVideoHeight()]);
+  if (dimensions) {
+    console.log(dimensions)
+    w = dimensions[0];
+    h = dimensions[1];
+    return { w, h }
+  } else {
+    console.log("Couldnt get player shit?")
+     w = player.iframe.clientWidth
     h = player.iframe.clientHeight
-  }
-  return { w, h }
+  };
 }
 
 const providerUtils = {
@@ -132,16 +136,17 @@ const getVideoID = (url = DEFAULT_PROPERTY_VALUES.url, source = null) => {
 /**
  * @method findPlayerAspectRatio Determine the aspect ratio of the actual video itself,
  *    which may be different than the IFRAME returned by the video provider.
- * @return {Number} A ratio of width divided by height.
+ * @return {Promise<Number>} A ratio of width divided by height.
  */
-const findPlayerAspectRatio = (container, player, videoSource) => {
+const findPlayerAspectRatio = async (container, player, videoSource) => {
   let w
   let h
   if (player) {
-    const dimensions = providerUtils[videoSource].getDimensions(player)
+    const dimensions = await providerUtils[videoSource].getDimensions(player)
     w = dimensions.w
     h = dimensions.h
   }
+
   if (!w || !h) {
     w = container.clientWidth
     h = container.clientHeight

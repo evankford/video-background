@@ -44,11 +44,13 @@ export class VideoBackground extends HTMLElement {
   observer?: IntersectionObserver
   muteButton?:HTMLElement
   overlayEl?:HTMLElement
+  oldSize?: number
   pauseButton?:HTMLElement
   player?: YoutubeAPIPlayer | Player
   playerReady: boolean;
   isIntersecting: boolean;
   icons?: Icons
+  playerReadyTimeout?: NodeJS.Timeout
   paused: boolean
   muted: boolean
   posterEl?:HTMLImageElement|HTMLPictureElement
@@ -75,7 +77,7 @@ export class VideoBackground extends HTMLElement {
     this.container = this;
     this.browserCanAutoPlay = false;
     this.videoCanAutoPlay = false
-    this.scaleFactor = 1.2;
+    this.scaleFactor = 1.4;
     this.videoAspectRatio = .69;
     this.hasStarted = false;
     this.playerReady = false;
@@ -248,8 +250,6 @@ export class VideoBackground extends HTMLElement {
           this.iframe = this.player.iframe;
           this.player.iframe.classList.add('background-video')
         }
-        this.videoAspectRatio = findPlayerAspectRatio(this.container, this.player, this.type)
-        this.syncPlayer()
         const readyEvent = new CustomEvent('ready')
         this.container.dispatchEvent(readyEvent)
         this.container.dispatchEvent(new CustomEvent('playCheck'))
@@ -285,11 +285,18 @@ export class VideoBackground extends HTMLElement {
 
     playerPromise.then(player => {
       if (this.type == 'vimeo') {
-        this.player = new Player(player.iframe)
+        this.player = new Player(player.iframe);
         this.iframe = player.iframe;
       } else {
         this.player = player
       }
+      findPlayerAspectRatio(this.container, this.player, this.type).then(resp => {
+        this.videoAspectRatio = resp
+        console.log(this.videoAspectRatio);
+        this.syncPlayer();
+      }).catch(e=> {
+        console.error(e);
+      });
     }, reason => {
       // Either the video embed failed to load for any reason (e.g. network latency, deleted video, etc.),
       // or the video element in the imfgembed was not configured to properly auto play.
@@ -298,7 +305,11 @@ export class VideoBackground extends HTMLElement {
   }
 
   syncPlayer() {
-    this.scaleVideo();
+    if (window.innerWidth !== this.oldSize ) {
+
+      this.scaleVideo();
+      this.oldSize = window.innerWidth;
+    }
   }
 
   /**
@@ -309,12 +320,10 @@ export class VideoBackground extends HTMLElement {
    * @param {Number} [scaleValue] A multiplier used to increase the scaled size of the media.
    * @return {undefined}
    */
-  scaleVideo(scaleValue = 1.4) {
+  scaleVideo(scaleValue = 2) {
     if (!this.player || this.iframe == null) {
       return;
     }
-    console.log("Resizing")
-
     let scale:number = this.scaleFactor ?? scaleValue;
 
 
@@ -324,6 +333,7 @@ export class VideoBackground extends HTMLElement {
       this.iframe.style.height = ''
       return
     }
+    // console.log("Triyng to fill")
 
     const iframeParent = this.iframe.parentElement;
     if (iframeParent == null ) {
@@ -335,14 +345,19 @@ export class VideoBackground extends HTMLElement {
     let pWidth = 0
     let pHeight = 0
     if (containerRatio > this.videoAspectRatio) {
+      console.log("Making taller")
       // at the same width, the video is taller than the window
       pWidth = containerWidth * scale
       pHeight = containerWidth * scale / this.videoAspectRatio
     } else if (this.videoAspectRatio > containerRatio) {
+      console.log("Should be shorter");
       // at the same width, the video is shorter than the window
+      console.log(this.videoAspectRatio);
+      console.log(containerHeight * scale );
       pWidth = containerHeight * scale * this.videoAspectRatio
       pHeight = containerHeight * scale
     } else {
+      console.log("they match?")
       // the window and video ratios match
       pWidth = containerWidth * scale
       pHeight = containerHeight * scale
@@ -472,10 +487,14 @@ export class VideoBackground extends HTMLElement {
   setPlayerReady(isReady = true) {
     const self = this;
     if (!this.player) {
-       setTimeout(() => {
+      this.playerReadyTimeout = setTimeout(() => {
         self.setPlayerReady();
-      }, 500);;
+      }, 500);
+
       return
+    }
+    if (this.playerReadyTimeout  ) {
+      clearTimeout(this.playerReadyTimeout)
     }
     if ('playVideo' in this.player) {
 
@@ -1006,12 +1025,14 @@ export class VideoBackground extends HTMLElement {
    */
   logger(msg: any, always:boolean = false) {
     if (always && this.debug.enabled) {
+
       console.log(msg);
     } else {
 
       if (!this.debug.enabled || !this.debug.verbose) {
         return
       }
+
       console.log(msg)
     }
   }
