@@ -292,7 +292,7 @@ export class VideoBackground extends HTMLElement {
       }
     }, reason => {
       // Either the video embed failed to load for any reason (e.g. network latency, deleted video, etc.),
-      // or the video element in the embed was not configured to properly auto play.
+      // or the video element in the imfgembed was not configured to properly auto play.
       this.logger(reason)
     })
   }
@@ -614,8 +614,8 @@ export class VideoBackground extends HTMLElement {
     }
   }
 
-  checkForInherentPoster():HTMLImageElement|false {
-    const inherentPoster = this.container.querySelector<HTMLImageElement>('img')
+  checkForInherentPoster():HTMLImageElement|HTMLPictureElement|false {
+    const inherentPoster = this.container.querySelector('img') ? this.container.querySelector('img') : this.container.querySelector('picture')
     if (inherentPoster) {
       return inherentPoster;
     }
