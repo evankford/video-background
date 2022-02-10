@@ -23,14 +23,25 @@ interface LocalSource extends Source {
 type SourcesShape = Array< LocalSource | Source>
 
 interface YoutubeAPIPlayer {
-  ready: boolean,
+  isReady: boolean,
   shouldPlay: boolean,
   destroy?: function,
-  iframe?: HTMLElement
+  iframe?: HTMLIFrameElement
   playVideo: function,
   pauseVideo: function,
   mute: function
   unmute: function
+}
+interface VimeoAPIPlayer {
+  ready: ()=>boolean
+  shouldPlay: boolean,
+  destroy?: function,
+  iframe?: HTMLElement
+  play: function,
+  pause: function,
+  unmute: function
+  setVolume?: function,
+  getPaused?: function
 }
 
 type VideoCan = {

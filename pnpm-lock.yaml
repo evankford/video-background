@@ -3,6 +3,8 @@ lockfileVersion: 5.3
 specifiers:
   '@types/can-autoplay': ^3.0.1
   '@types/node': ^17.0.9
+  '@types/vimeo__player': ^2.16.1
+  '@vimeo/player': ^2.16.3
   can-autoplay: ^3.0.2
   css-loader: ^6.5.1
   express: ^4.17.2
@@ -25,6 +27,7 @@ specifiers:
   webpack-merge: ^5.8.0
 
 dependencies:
+  '@vimeo/player': 2.16.3
   can-autoplay: 3.0.2
   lodash.get: 4.4.2
   terser-webpack-plugin: 5.3.0_webpack@5.66.0
@@ -33,6 +36,7 @@ dependencies:
 devDependencies:
   '@types/can-autoplay': 3.0.1
   '@types/node': 17.0.9
+  '@types/vimeo__player': 2.16.1
   css-loader: 6.5.1_webpack@5.66.0
   express: 4.17.2
   file-loader: 6.2.0_webpack@5.66.0
@@ -194,11 +198,22 @@ packages:
       '@types/node': 17.0.9
     dev: true
 
+  /@types/vimeo__player/2.16.1:
+    resolution: {integrity: sha512-RGYFuZaSNmXpMkiBovv5skEs9jRSOojvJBXXUxxjrWg1qZ82k09CzbYcUJtPUPbUO8EzrtwtwGXAWKWEKpoHNQ==}
+    dev: true
+
   /@types/ws/8.2.2:
     resolution: {integrity: sha512-NOn5eIcgWLOo6qW8AcuLZ7G8PycXu0xTxxkS6Q18VWFxgPUSOwV0pBj2a/4viNZVu25i7RIB7GttdkAIUUXOOg==}
     dependencies:
       '@types/node': 17.0.9
     dev: true
+
+  /@vimeo/player/2.16.3:
+    resolution: {integrity: sha512-B9WX3dzPvLLhbrqDpHQS1xMUhCZ1iUUvmQubOAp5WBN9RFkNfDC41kv14nYnr0TdSvNV+d6KiG5sDOAbo7tDCg==}
+    dependencies:
+      native-promise-only: 0.8.1
+      weakmap-polyfill: 2.0.4
+    dev: false
 
   /@webassemblyjs/ast/1.11.1:
     resolution: {integrity: sha512-ukBh14qFLjxTQNTXocdyksN5QdM28S1CxHt2rdskFyL+xFV7VremuBLVbmCePj+URalXBENx/9Lm7lnhihtCSw==}
@@ -1618,6 +1633,10 @@ packages:
     hasBin: true
     dev: true
 
+  /native-promise-only/0.8.1:
+    resolution: {integrity: sha1-IKMYwwy0X3H+et+/eyHJnBRy7xE=}
+    dev: false
+
   /negotiator/0.6.2:
     resolution: {integrity: sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw==}
     engines: {node: '>= 0.6'}
@@ -2504,6 +2523,11 @@ packages:
     dependencies:
       minimalistic-assert: 1.0.1
     dev: true
+
+  /weakmap-polyfill/2.0.4:
+    resolution: {integrity: sha512-ZzxBf288iALJseijWelmECm/1x7ZwQn3sMYIkDr2VvZp7r6SEKuT8D0O9Wiq6L9Nl5mazrOMcmiZE/2NCenaxw==}
+    engines: {node: '>=8.10.0'}
+    dev: false
 
   /webpack-bundle-analyzer/4.5.0:
     resolution: {integrity: sha512-GUMZlM3SKwS8Z+CKeIFx7CVoHn3dXFcUAjT/dcZQQmfSZGvitPfMob2ipjai7ovFFqPvTqkEZ/leL4O0YOdAYQ==}

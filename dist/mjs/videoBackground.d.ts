@@ -1,4 +1,5 @@
 import Icons from './utils/icons';
+import Player from "@vimeo/player";
 /**
  * @class VideoBackground creates a custom web component
  * @todo separate statuses and capabilities and stores into their own objects
@@ -12,12 +13,13 @@ export declare class VideoBackground extends HTMLElement {
         enabled: boolean;
         verbose: boolean;
     };
+    iframe?: HTMLIFrameElement | null;
     can: VideoCan;
     observer?: IntersectionObserver;
     muteButton?: HTMLElement;
     overlayEl?: HTMLElement;
     pauseButton?: HTMLElement;
-    player?: YoutubeAPIPlayer;
+    player?: YoutubeAPIPlayer | Player;
     playerReady: boolean;
     isIntersecting: boolean;
     icons?: Icons;
@@ -81,6 +83,8 @@ export declare class VideoBackground extends HTMLElement {
     checkForInherentPoster(): HTMLImageElement | false;
     buildPoster(): false | undefined;
     buildOverlay(): void;
+    tryToPlay(): void;
+    tryToPause(): void;
     buildIntersectionObserver(): void;
     handleIntersection(entries: IntersectionObserverEntry[], observer: IntersectionObserver): void;
     get autoplay(): boolean;

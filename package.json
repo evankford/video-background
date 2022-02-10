@@ -1,6 +1,6 @@
 {
   "name": "@atmtfy/video-background",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "Automatic background video from various sources (Youtube, MP4, vimeo) with autoplay across devices. No JS dependencies.",
   "main": "src/index.ts",
   "scripts": {
@@ -33,6 +33,7 @@
   "devDependencies": {
     "@types/can-autoplay": "^3.0.1",
     "@types/node": "^17.0.9",
+    "@types/vimeo__player": "^2.16.1",
     "css-loader": "^6.5.1",
     "express": "^4.17.2",
     "file-loader": "^6.2.0",
@@ -57,6 +58,7 @@
     }
   },
   "dependencies": {
+    "@vimeo/player": "^2.16.3",
     "can-autoplay": "^3.0.2",
     "lodash.get": "^4.4.2",
     "terser-webpack-plugin": "^5.3.0",

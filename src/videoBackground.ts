@@ -5,6 +5,8 @@ import { initializeYouTubeAPI, initializeYouTubePlayer } from './utils/youtube';
 import { findPlayerAspectRatio, getStartTime, getVideoID, getVideoSource } from './utils/utils'
 import Icons from './utils/icons';
 
+import Player from "@vimeo/player";
+
  var
     is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
     is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
@@ -37,12 +39,13 @@ export class VideoBackground extends HTMLElement {
     enabled: boolean,
     verbose: boolean,
   };
+  iframe?:HTMLIFrameElement | null
   can: VideoCan
   observer?: IntersectionObserver
   muteButton?:HTMLElement
   overlayEl?:HTMLElement
   pauseButton?:HTMLElement
-  player?: YoutubeAPIPlayer
+  player?: YoutubeAPIPlayer | Player
   playerReady: boolean;
   isIntersecting: boolean;
   icons?: Icons
@@ -85,12 +88,15 @@ export class VideoBackground extends HTMLElement {
     }
     this.paused = false;
     this.player = {
-      ready: false,
+      isReady: false,
       shouldPlay: false,
       playVideo: ()=>{},
+      // play: ()=>{},
+      // pause: ()=>{},
       pauseVideo: ()=>{},
       mute: ()=>{},
       unmute: ()=> {},
+      // setVolume: null
     }
 
 
@@ -142,7 +148,6 @@ export class VideoBackground extends HTMLElement {
   }
 
   buildIcons() {
-    console.log(this.can);
     if (this.can.unmute || this.can.pause) {
       this.icons = new Icons({wrapper: this,can: this.can, onMuteUnmute: this.toggleMute.bind(this), onPausePlay: this.togglePause.bind(this) , initialState: { muted: this.muted, paused: false}})
     }
@@ -185,14 +190,17 @@ export class VideoBackground extends HTMLElement {
     this.sourceId = getVideoID(this.url, this.type);
 
     if (this.browserCanAutoPlay  && this.sourceId ) {
-      this.player.ready = false
+      if ('playVideo' in this.player) {
+
+        this.player.isReady = false
+      }
 
       const sourceAPIFunction = videoSourceModules[this.type].api
       const apiPromise = sourceAPIFunction(window);
       apiPromise.then((message) => {
         this.logger(message);
-        if (this.player) {
-          this.player.ready = false
+        if (this.player && 'playVideo' in this.player) {
+          this.player.isReady = false
         }
         this.initializeVideoPlayer()
       }).catch((message) => {
@@ -213,13 +221,14 @@ export class VideoBackground extends HTMLElement {
       this.logger('Problem with initializing video API. Contact the developer', true);
       return
     }
-    if (this.player.ready) {
+    const ready = 'playVideo' in this.player && this.player.isReady || 'ready' in this.player && this.player.ready()
+    if (ready) {
       try {
         this.player.destroy()
       } catch (e) {
         // nothing to destroy
       }
-      this.player.ready = false
+      if ('playVideo' in this.player) { this.player.isReady = false}
     }
 
     if ((this.type != 'youtube' && this.type != 'vimeo')) {
@@ -235,8 +244,8 @@ export class VideoBackground extends HTMLElement {
       speed: 1,
       startTime: this.startTime,
       readyCallback: () => {
-
-        if (this.player && this.player.iframe) {
+        if (this.player && 'iframe' in this.player && this.player.iframe) {
+          this.iframe = this.player.iframe;
           this.player.iframe.classList.add('background-video')
         }
         this.videoAspectRatio = findPlayerAspectRatio(this.container, this.player, this.type)
@@ -256,8 +265,8 @@ export class VideoBackground extends HTMLElement {
             // this.logger('video started playing')
             this.videoCanAutoPlay = true
             if (this.player) {
-              this.player.ready = true
-              if (this.player.iframe) {
+              if ('iframe' in this.player && this.player.iframe) {
+                this.player.isReady = true
                 this.player.iframe.classList.add('ready')
               }
             }
@@ -275,7 +284,12 @@ export class VideoBackground extends HTMLElement {
     })
 
     playerPromise.then(player => {
-      this.player = player
+      if (this.type == 'vimeo') {
+        this.player = new Player(player.iframe)
+        this.iframe = player.iframe;
+      } else {
+        this.player = player
+      }
     }, reason => {
       // Either the video embed failed to load for any reason (e.g. network latency, deleted video, etc.),
       // or the video element in the embed was not configured to properly auto play.
@@ -295,27 +309,23 @@ export class VideoBackground extends HTMLElement {
    * @param {Number} [scaleValue] A multiplier used to increase the scaled size of the media.
    * @return {undefined}
    */
-  scaleVideo(scaleValue = 1.3) {
-    if (!this.player) {
+  scaleVideo(scaleValue = 1.4) {
+    if (!this.player || this.iframe == null) {
       return;
     }
-
-    const playerIframe = this.player.iframe
-    if (!playerIframe) {
-      return
-    }
+    console.log("Resizing")
 
     let scale:number = this.scaleFactor ?? scaleValue;
 
 
     if (this.mode !== 'fill') {
 
-      playerIframe.style.width = ''
-      playerIframe.style.height = ''
+      this.iframe.style.width = ''
+      this.iframe.style.height = ''
       return
     }
 
-    const iframeParent = playerIframe.parentElement;
+    const iframeParent = this.iframe.parentElement;
     if (iframeParent == null ) {
       return;
     }
@@ -337,11 +347,12 @@ export class VideoBackground extends HTMLElement {
       pWidth = containerWidth * scale
       pHeight = containerHeight * scale
     }
-    playerIframe.style.width = pWidth + 'px'
-    playerIframe.style.height = pHeight + 'px'
-    playerIframe.style.left = 0 - ((pWidth - containerWidth) / 2) + 'px'
-    playerIframe.style.top = 0 - ((pHeight - containerHeight) / 2) + 'px'
-  }
+    this.iframe.style.width = pWidth + 'px'
+    this.iframe.style.height = pHeight + 'px'
+    this.iframe.style.left = 0 - ((pWidth - containerWidth) / 2) + 'px'
+    this.iframe.style.top = 0 - ((pHeight - containerHeight) / 2) + 'px'
+    }
+
 
 
 
@@ -375,6 +386,7 @@ export class VideoBackground extends HTMLElement {
       this.videoEl.setAttribute('playsinline', '');
       this.videoEl.setAttribute('preload', 'metadata');
       this.videoEl.setAttribute('muted', "true");
+      this.videoEl.volume = 0;
 
       if (typeof this.poster == 'string') {
         this.videoEl.setAttribute('poster', this.poster);
@@ -455,6 +467,8 @@ export class VideoBackground extends HTMLElement {
     }
   }
 
+
+
   setPlayerReady(isReady = true) {
     const self = this;
     if (!this.player) {
@@ -463,18 +477,18 @@ export class VideoBackground extends HTMLElement {
       }, 500);;
       return
     }
+    if ('playVideo' in this.player) {
 
-    this.player.shouldPlay = isReady;
+      this.player.shouldPlay = isReady;
+    }
     if (this.player) {
       if (isReady) {
-        this.player.playVideo();
-
-
-      }else {
-        this.player.pauseVideo()
+      this.tryToPlay();
+      } else {
+        this.tryToPause()
       }
     }
-    if (this.player?.iframe) {
+    if ('playVideo' in this.player && this.player?.iframe) {
       this.player.iframe.setAttribute('data-should-play', isReady.toString())
     }
   }
@@ -495,13 +509,14 @@ export class VideoBackground extends HTMLElement {
       if (this.type == 'local' && this.videoEl) {
         this.videoEl.play();
       } else if (this.player) {
-        this.player.playVideo();
+        this.tryToPlay()
       }
     } else {
       if (this.type == 'local' && this.videoEl) {
         this.videoEl.pause();
       } else if (this.player) {
-        this.player.pauseVideo();
+        this.tryToPause()
+
       }
     }
     this.paused = !this.paused;
@@ -518,10 +533,16 @@ export class VideoBackground extends HTMLElement {
         videoToMute.muted = true;
       }
     } else if (this.player) {
-      this.player.mute();
+      if ('mute' in this.player && this.player.mute == 'function') {
+
+        this.player.mute();
+      } else if ('setVolume' in this.player ) {
+        this.player.setVolume(0)
+      }
     }
 
   }
+
   unmuteVideo() {
     this.logger('unmuting video');
     if (this.type == 'local' && this.videoEl) {
@@ -532,7 +553,11 @@ export class VideoBackground extends HTMLElement {
 
       }
     } else if (this.player) {
+      if ('unmute' in this.player && this.player.unmute == 'function') {
       this.player.unmute();
+      } else if ('setVolume' in this.player ) {
+        this.player.setVolume(0.8)
+      }
     }
 
   }
@@ -648,6 +673,30 @@ export class VideoBackground extends HTMLElement {
     this.overlayEl = document.createElement('div');
     this.overlayEl.classList.add('vbg__overlay');
     this.appendChild(this.overlayEl);
+  }
+
+  tryToPlay() {
+    if (!this.player) return;
+
+     if ('playVideo' in this.player && typeof this.player.playVideo == 'function' ) {
+      this.player.playVideo();
+    } else if ('play' in this.player && typeof this.player.play == 'function') {
+      this.player.play();
+    }
+  }
+
+  tryToPause() {
+
+    if (!this.player) return;
+    if ('pauseVideo' in this.player && typeof this.player.pauseVideo == 'function' ) {
+      this.player.pauseVideo();
+    } else {
+
+      if ('pause' in this.player && typeof this.player.pause == 'function') {
+      this.player.pause();
+      this.player.getPaused();
+    }
+  }
   }
 
   buildIntersectionObserver() {
