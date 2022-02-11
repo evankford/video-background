@@ -195,8 +195,9 @@ export class VideoBackground extends HTMLElement {
 
     if (this.browserCanAutoPlay  && this.sourceId ) {
       if ('playVideo' in this.player) {
-
         this.player.isReady = false
+      } else {
+
       }
 
       const sourceAPIFunction = videoSourceModules[this.type].api
@@ -493,6 +494,7 @@ export class VideoBackground extends HTMLElement {
     if (this.playerReadyTimeout  ) {
       clearTimeout(this.playerReadyTimeout)
     }
+    this.playerReady = isReady;
     if ('playVideo' in this.player) {
 
       this.player.shouldPlay = isReady;
