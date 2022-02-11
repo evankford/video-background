@@ -708,8 +708,12 @@ export class VideoBackground extends HTMLElement {
     } else {
 
       if ('pause' in this.player && typeof this.player.pause == 'function') {
-      this.player.pause();
-      this.player.getPaused();
+        const player = this.player;
+        player.getPaused().then((paused)=> {
+          if (!paused ) {
+            player.pause();
+          }
+      })
     }
   }
   }
