@@ -124,6 +124,7 @@ export class VideoBackground extends HTMLElement {
   init() {
     if (this.status == "none") {
       this.status = "waiting";
+      this.type = this.getSourceType(this.src);
       this.compileSources(this.src)
       this.buildDOM();
       this.buildIntersectionObserver();
@@ -494,7 +495,7 @@ export class VideoBackground extends HTMLElement {
     if (this.playerReadyTimeout  ) {
       clearTimeout(this.playerReadyTimeout)
     }
-    this.playerReady = isReady;
+
     if ('playVideo' in this.player) {
 
       this.player.shouldPlay = isReady;
@@ -1008,7 +1009,10 @@ export class VideoBackground extends HTMLElement {
     }
   }
 
-  getSourceType(url:string):SourceType {
+  getSourceType(url:string|null):SourceType {
+    if (url == null) {
+      return "error";
+    }
     const ytTest = new RegExp(/^(?:https?:)?(?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]{7,15})(?:[\?&][a-zA-Z0-9\_-]+=[a-zA-Z0-9\_-]+)*$/);
     const vimeoTest = new RegExp(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
     const videoTest = new RegExp(/.*?\/.*(webm|mp4|ogg|ogm).*?/i);

@@ -115,7 +115,7 @@ export declare class VideoBackground extends HTMLElement {
     prepareSingleSource(url: string, size?: number | false): LocalSource | Source;
     getFileType(url: string): FileType | false;
     handleMalformedSource(url: string): Source;
-    getSourceType(url: string): SourceType;
+    getSourceType(url: string | null): SourceType;
     connectedCallback(): void;
     /**
      * @method logger A guarded console logger.
