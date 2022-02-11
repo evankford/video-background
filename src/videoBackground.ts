@@ -191,6 +191,7 @@ export class VideoBackground extends HTMLElement {
     }
 
     this.sourceId = getVideoID(this.url, this.type);
+    console.log(this.sourceId);
 
     if (this.browserCanAutoPlay  && this.sourceId ) {
       if ('playVideo' in this.player) {
