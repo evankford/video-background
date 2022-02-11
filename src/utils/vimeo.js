@@ -21,7 +21,7 @@ const initializeVimeoAPI = () => {
  * and sets ready state for the player and container.
  *
  */
-const postMessageManager = (action, value) => {
+const postMessageManager = (action, value, iframe) => {
   const data = {
     method: action,
   };
@@ -32,7 +32,7 @@ const postMessageManager = (action, value) => {
 
   const message = JSON.stringify(data);
   playerIframe.ownerDocument.defaultView.eval(
-    "(function(playerIframe){ playerIframe.contentWindow.postMessage(" +
+    "(function(playerIframe){ playerIframe.contentWindow && playerIframe.contentWindow.postMessage(" +
       message +
       ", " +
       JSON.stringify(playerOrigin) +
@@ -67,6 +67,7 @@ const initializeVimeoPlayer = ({
       setPlaybackRate: () => {},
     };
     resolve(player);
+    // const vimeoPlayer =
 
     const getVideoDetails = () => {
       postMessageManager("getDuration");
