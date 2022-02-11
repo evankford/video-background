@@ -747,20 +747,22 @@ export class VideoBackground extends HTMLElement {
   }
 
   set autoplay(isAutoplay:boolean) {
-    if (isAutoplay) {
-      this.setAttribute('autoplay', '');
-    } else {
-      this.removeAttribute('autoplay');
-    }
+    this.autoplay = isAutoplay;
+    // if (isAutoplay) {
+    //   this.setAttribute('autoplay', '');
+    // } else {
+    //   this.removeAttribute('autoplay');
+    // }
   }
 
 
   set loop(isLoop:boolean) {
-    if (isLoop) {
-      this.setAttribute('loop', '');
-    } else {
-      this.removeAttribute('loop');
-    }
+    this.loop = isLoop
+    // if (isLoop) {
+    //   this.setAttribute('loop', '');
+    // } else {
+    //   this.removeAttribute('loop');
+    // }
   }
 
   get mode():"fit"|"fill" {
@@ -771,8 +773,9 @@ export class VideoBackground extends HTMLElement {
     }
   }
 
-  set mode(fitOrFill: "fit" | "fill") {
-      this.setAttribute('mode', fitOrFill);
+  set mode(fitOrFill: "fit" | "fill" ) {
+    this.mode = fitOrFill
+      // this.setAttribute('mode', fitOrFill);
   }
 
   get status():loadingStatus {
@@ -789,15 +792,17 @@ export class VideoBackground extends HTMLElement {
 
   set status(status) {
     if (status) {
+      this.status = status
       // switch (status) {
       //   case ("waiting" || "loading"):
       //   break;
       // }
 
 
-      this.setAttribute('status', status);
+      // this.setAttribute('status', status);
     } else {
-      this.setAttribute('status', 'error')
+      this.status = "error"
+      // this.setAttribute('status', 'error')
     }
   }
 
@@ -830,12 +835,13 @@ export class VideoBackground extends HTMLElement {
   }
 
   set src(srcString:string|null) {
-    if (srcString == null) {
-      this.removeAttribute('src');
-    } else {
-      this.setAttribute('src',  srcString);
-      this.compileSources(srcString);
-    }
+    this.src = srcString
+    this.compileSources(srcString);
+    // if (srcString == null) {
+    //   this.removeAttribute('src');
+    // } else {
+    //   this.setAttribute('src',  srcString);
+    // }
   }
 
 
@@ -843,15 +849,16 @@ export class VideoBackground extends HTMLElement {
    * Sets the poster url string, and sets loading that poster into motion
    */
   set poster(posterString) {
+    this.poster = posterString;
     if (posterString) {
       // switch (status) {
       //   case ("waiting" || "loading"):
       //   break;
       // }
-      this.setAttribute('poster', posterString);
+      // this.setAttribute('poster', posterString);
       this.buildPoster();
-    } else {
-      this.removeAttribute('poster')
+    // } else {
+    //   this.removeAttribute('poster')
     }
   }
 
