@@ -37,12 +37,10 @@ const getVimeoDimensions = async player => {
   let h
   const dimensions = await Promise.all([player.getVideoWidth(), player.getVideoHeight()]);
   if (dimensions) {
-    console.log(dimensions)
     w = dimensions[0];
     h = dimensions[1];
     return { w, h }
   } else {
-    console.log("Couldnt get player shit?")
      w = player.iframe.clientWidth
     h = player.iframe.clientHeight
   };

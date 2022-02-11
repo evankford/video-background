@@ -115,20 +115,21 @@ export class VideoBackground extends HTMLElement {
       this.debug = {enabled : false, verbose: false}
     }
     this.logger("Debugging video-background.");
-    this.logger(this)
     this.init();
   }
 
 
+
+
   init() {
+    if (this.status == "none") {
+      this.status = "waiting";
+      this.compileSources(this.src)
+      this.buildDOM();
+      this.buildIntersectionObserver();
 
-    this.status = "waiting";
-    this.compileSources(this.src)
-    this.buildDOM();
-    this.buildIntersectionObserver();
-
-    this.addEventListener('playCheck', this.handlePlayCheck.bind(this));
-
+      this.addEventListener('playCheck', this.handlePlayCheck.bind(this));
+    }
   }
 
 
@@ -345,19 +346,14 @@ export class VideoBackground extends HTMLElement {
     let pWidth = 0
     let pHeight = 0
     if (containerRatio > this.videoAspectRatio) {
-      console.log("Making taller")
       // at the same width, the video is taller than the window
       pWidth = containerWidth * scale
       pHeight = containerWidth * scale / this.videoAspectRatio
     } else if (this.videoAspectRatio > containerRatio) {
-      console.log("Should be shorter");
       // at the same width, the video is shorter than the window
-      console.log(this.videoAspectRatio);
-      console.log(containerHeight * scale );
       pWidth = containerHeight * scale * this.videoAspectRatio
       pHeight = containerHeight * scale
     } else {
-      console.log("they match?")
       // the window and video ratios match
       pWidth = containerWidth * scale
       pHeight = containerHeight * scale
@@ -513,7 +509,6 @@ export class VideoBackground extends HTMLElement {
   }
 
   toggleMute() {
-    console.log("Toggling mute:" + this.muted)
     if (this.muted == true) {
       this.unmuteVideo()
       this.muted = false;
@@ -697,9 +692,10 @@ export class VideoBackground extends HTMLElement {
   tryToPlay() {
     if (!this.player) return;
 
-     if ('playVideo' in this.player && typeof this.player.playVideo == 'function' ) {
+    if ('playVideo' in this.player && typeof this.player.playVideo == 'function' ) {
       this.player.playVideo();
     } else if ('play' in this.player && typeof this.player.play == 'function') {
+      this.hasStarted = true;
       this.player.play();
     }
   }
@@ -1014,7 +1010,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   connectedCallback() {
-
+    this.init()
   }
 
   /**
