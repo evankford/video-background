@@ -13,7 +13,7 @@ const initializeVimeoAPI = () => {
   // potential additional integrations.
   return new Promise((resolve, reject) => {
     resolve("no api needed");
-  });
+  })
 };
 
 /**

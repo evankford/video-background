@@ -223,6 +223,7 @@ export class VideoBackground extends HTMLElement {
    * @return {undefined}
    */
   initializeVideoPlayer() {
+    this.logger("Initializing video player");
      if (!this.url || !this.player || (this.type != 'youtube' && this.type != 'vimeo')) {
       this.logger('Problem with initializing video API. Contact the developer', true);
       return
@@ -288,11 +289,14 @@ export class VideoBackground extends HTMLElement {
     })
 
     playerPromise.then(player => {
+      this.logger("Player promise complete");
       if (this.type == 'vimeo') {
         this.player = new Player(player.iframe);
         this.iframe = player.iframe;
       } else {
+
         this.player = player
+        this.playerReady = true;
       }
       findPlayerAspectRatio(this.container, this.player, this.type).then(resp => {
         this.videoAspectRatio = resp
@@ -694,6 +698,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   tryToPlay() {
+    console.log("Trying to play");
     if (!this.player) return;
 
     if ('playVideo' in this.player && typeof this.player.playVideo == 'function' ) {
@@ -705,6 +710,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   tryToPause() {
+    console.log("Trying to pause");
 
     if (!this.player) return;
     if ('pauseVideo' in this.player && typeof this.player.pauseVideo == 'function' ) {
