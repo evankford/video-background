@@ -75,7 +75,6 @@ export declare class VideoBackground extends HTMLElement {
     get posterSet(): string | false;
     get src(): string | null;
     set src(srcString: string | null);
-    set poster(posterString: string | false);
     compileSources(srcString: string | null): false | undefined;
     cleanupSources(sources: SourcesShape): SourcesShape;
     prepareSingleSource(url: string, size?: number | false): LocalSource | Source;
