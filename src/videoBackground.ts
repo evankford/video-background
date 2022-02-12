@@ -1038,7 +1038,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   reset() {
-        this.logger("Resetting video-background.");
+    this.logger("Resetting video-background.");
 
       //Setting up props
     this.sourcesReady = false;
