@@ -1081,7 +1081,13 @@ export class VideoBackground extends HTMLElement {
     }
   }
 
+    attributeChangedCallback() {
+
+      this.logger("AttributeChanged callback running.");
+      this.init();
+    }
   connectedCallback() {
+    console.log("We're")
     this.logger("Connected callback running.");
     this.init()
   }

@@ -83,6 +83,7 @@ export declare class VideoBackground extends HTMLElement {
     handleMalformedSource(url: string): Source;
     getSourceType(url: string | null): SourceType;
     reset(): void;
+    attributeChangedCallback(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;
     logger(msg: any, always?: boolean): "" | undefined;
