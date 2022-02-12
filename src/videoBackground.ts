@@ -456,7 +456,7 @@ export class VideoBackground extends HTMLElement {
   handlePlayCheck() {
     this.logger(`Ready: ${this.playerReady}, intersecting: ${this.isIntersecting}`)
     if (this.type == 'local' && this.videoEl) {
-    if (this.playerReady && this.isIntersecting) {
+        if (this.playerReady && this.isIntersecting) {
       this.status = 'playing';
       this.hasStarted = true;
         if (this.autoplay) {
@@ -473,13 +473,15 @@ export class VideoBackground extends HTMLElement {
     } else { //Handle shouldn't play
 
        if (this.isIntersecting) {
-          this.setPlayerReady(true);
+          // this.setPlayerReady(true);
           this.status = this.hasStarted ? 'paused' : 'waiting';
           // this.player.playVideo();
+          this.tryToPlay();
 
 
         } else {
-            this.setPlayerReady(false)
+          this.tryToPause();
+            // this.setPlayerReady(false)
           }
         }
     if (this.muted) {
