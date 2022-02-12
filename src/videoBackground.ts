@@ -123,6 +123,8 @@ export class VideoBackground extends HTMLElement {
 
 
   init() {
+      this.logger("Resetting video-background (status = " + this.status + ").");
+
     if (this.status == "none") {
       this.status = "waiting";
       this.type = this.getSourceType(this.src);
@@ -161,10 +163,11 @@ export class VideoBackground extends HTMLElement {
   buildVideo() {
     //Never should have mixed sources.
 
+    this.logger("Building video based on type: " + this.type);
     if (!this.sourcesReady) {
+      this.logger("Sources Not ready");
       return false;
     }
-    this.logger("Building video based on type: " + this.type);
     if (this.type == 'local' ) {
       this.buildLocalVideo()
       //Check to make sure we have sources
@@ -1037,6 +1040,8 @@ export class VideoBackground extends HTMLElement {
   }
 
   reset() {
+        this.logger("Resetting video-background.");
+
       //Setting up props
     this.sourcesReady = false;
     this.container = this;
@@ -1080,7 +1085,6 @@ export class VideoBackground extends HTMLElement {
     } else {
       this.debug = {enabled : false, verbose: false}
     }
-    this.logger("Resetting video-background.");
   }
 
   connectedCallback() {
