@@ -125,5 +125,5 @@ export declare class VideoBackground extends HTMLElement {
      * @param always Whether to always show if not verbose
      * @return {undefined}
      */
-    logger(msg: any, always?: boolean): void;
+    logger(msg: any, always?: boolean): "" | undefined;
 }

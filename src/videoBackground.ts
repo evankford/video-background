@@ -71,8 +71,6 @@ export class VideoBackground extends HTMLElement {
 
   constructor() {
     super();
-
-
     //Setting up props
     this.sourcesReady = false;
     this.container = this;
@@ -1114,7 +1112,7 @@ export class VideoBackground extends HTMLElement {
     } else {
 
       if (!this.debug.enabled || !this.debug.verbose) {
-        return
+        return``
       }
 
       console.log(msg)
