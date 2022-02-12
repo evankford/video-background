@@ -1050,6 +1050,10 @@ export class VideoBackground extends HTMLElement {
     this.scaleFactor = 1.4;
     this.videoAspectRatio = .69;
     this.hasStarted = false;
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = undefined;
+    }
     this.playerReady = false;
     this.isIntersecting = false;
     this.can = { unmute: this.hasAttribute('can-unmute'), pause:  this.hasAttribute('can-pause')};
@@ -1088,9 +1092,12 @@ export class VideoBackground extends HTMLElement {
   }
 
   connectedCallback() {
+    this.logger("Connected callback running.");
     this.init()
   }
   disconnectedCallback() {
+    this.logger("Disconnected callback running.");
+
     this.reset()
   }
 
