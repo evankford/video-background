@@ -200,13 +200,13 @@ export class VideoBackground extends HTMLElement {
    * @return {undefined}
    */
   initializeVideoAPI() {
+    this.logger("Inittializing video api");
     if (!this.url || !this.player || (this.type != 'youtube' && this.type != 'vimeo')) {
       this.logger('Problem with initializing video API. Contact the developer', true);
       return
     }
 
     this.sourceId = getVideoID(this.url, this.type);
-    console.log(this.sourceId);
 
     if (this.browserCanAutoPlay  && this.sourceId ) {
       if ('playVideo' in this.player) {
