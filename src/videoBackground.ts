@@ -121,6 +121,16 @@ export class VideoBackground extends HTMLElement {
 
 
   init() {
+    if (this.getAttribute('debug')) {
+      if (this.getAttribute('debug') == "verbose") {
+
+        this.debug = { enabled: true, verbose: true}
+      }else {
+        this.debug = { enabled: true, verbose: false}
+      }
+    } else {
+      this.debug = {enabled : false, verbose: false}
+    }
     this.logger("Resetting video-background (status = " + this.status + ").");
 
     if (this.status == "none") {
@@ -129,6 +139,8 @@ export class VideoBackground extends HTMLElement {
       this.compileSources(this.src)
       this.buildDOM();
       this.buildIntersectionObserver();
+
+    //Setting up debug
 
       this.addEventListener('playCheck', this.handlePlayCheck.bind(this));
     }
@@ -1068,17 +1080,6 @@ export class VideoBackground extends HTMLElement {
 
 
 
-    //Setting up debug
-    if (this.getAttribute('debug')) {
-      if (this.getAttribute('debug') == "verbose") {
-
-        this.debug = { enabled: true, verbose: true}
-      }else {
-        this.debug = { enabled: true, verbose: false}
-      }
-    } else {
-      this.debug = {enabled : false, verbose: false}
-    }
   }
 
     attributeChangedCallback() {
@@ -1087,9 +1088,9 @@ export class VideoBackground extends HTMLElement {
       this.init();
     }
   connectedCallback() {
-    console.log("We're")
-    this.logger("Connected callback running.");
+    console.log(this)
     this.init()
+    this.logger("Connected callback running.");
   }
   disconnectedCallback() {
     this.logger("Disconnected callback running.");
