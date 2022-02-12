@@ -846,7 +846,7 @@ export class VideoBackground extends HTMLElement {
   get src():string|null {
     const src = this.getAttribute('src');
     if (typeof src == 'string') {
-      // this.compileSources(src)
+      this.compileSources(src)
 
     }
     return src;
@@ -854,12 +854,20 @@ export class VideoBackground extends HTMLElement {
 
   set src(srcString:string|null) {
     // this.src = srcString
-    // this.compileSources(srcString);
+    this.compileSources(srcString);
     // if (srcString == null) {
     //   this.removeAttribute('src');
     // } else {
     //   this.setAttribute('src',  srcString);
     // }
+  }
+
+
+  /**
+   * Sets the poster url string, and sets loading that poster into motion
+   */
+  set poster(posterString) {
+
   }
 
 
