@@ -6,6 +6,7 @@ import { findPlayerAspectRatio, getStartTime, getVideoID, getVideoSource } from 
 import Icons from './utils/icons';
 
 import Player from "@vimeo/player";
+import { urlToHttpOptions } from 'url';
 
  var
     is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
@@ -698,7 +699,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   tryToPlay() {
-    console.log("Trying to play");
+    this.logger("Trying to play");
     if (!this.player) return;
 
     if ('playVideo' in this.player && typeof this.player.playVideo == 'function' ) {
@@ -710,7 +711,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   tryToPause() {
-    console.log("Trying to pause");
+    this.logger("Trying to pause");
 
     if (!this.player) return;
     if ('pauseVideo' in this.player && typeof this.player.pauseVideo == 'function' ) {
@@ -730,7 +731,7 @@ export class VideoBackground extends HTMLElement {
 
   buildIntersectionObserver() {
     const options = {
-      threshold: 0.3
+      threshold: 0.1
     }
 
     this.observer = new IntersectionObserver(this.handleIntersection.bind(this), options);
@@ -740,6 +741,8 @@ export class VideoBackground extends HTMLElement {
   handleIntersection(entries:IntersectionObserverEntry[],observer:IntersectionObserver) {
     entries.forEach((entry:IntersectionObserverEntry)=>{
       if ( entry.target == this.container) {
+
+        this.logger(`Observing! Intersection found: ${entry.isIntersecting}.`)
         this.logger(`Observing! Intersection found: ${entry.isIntersecting}.`)
         this.isIntersecting = entry.isIntersecting;
       }
@@ -1033,8 +1036,58 @@ export class VideoBackground extends HTMLElement {
     }
   }
 
+  reset() {
+      //Setting up props
+    this.sourcesReady = false;
+    this.container = this;
+    this.browserCanAutoPlay = false;
+    this.videoCanAutoPlay = false
+    this.scaleFactor = 1.4;
+    this.videoAspectRatio = .69;
+    this.hasStarted = false;
+    this.playerReady = false;
+    this.isIntersecting = false;
+    this.can = { unmute: this.hasAttribute('can-unmute'), pause:  this.hasAttribute('can-pause')};
+    this.muted = this.getAttribute('muted') !== 'false';
+    this.status = "none";
+
+    if (is_ios && is_safari) {
+      this.muted = true;
+    }
+    this.paused = false;
+    this.player = {
+      isReady: false,
+      shouldPlay: false,
+      playVideo: ()=>{},
+      // play: ()=>{},
+      // pause: ()=>{},
+      pauseVideo: ()=>{},
+      mute: ()=>{},
+      unmute: ()=> {},
+      // setVolume: null
+    }
+
+
+
+    //Setting up debug
+    if (this.getAttribute('debug')) {
+      if (this.getAttribute('debug') == "verbose") {
+
+        this.debug = { enabled: true, verbose: true}
+      }else {
+        this.debug = { enabled: true, verbose: false}
+      }
+    } else {
+      this.debug = {enabled : false, verbose: false}
+    }
+    this.logger("Resetting video-background.");
+  }
+
   connectedCallback() {
     this.init()
+  }
+  disconnectedCallback() {
+    this.reset()
   }
 
   /**
