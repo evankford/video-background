@@ -21,7 +21,8 @@ const TIMEOUT = 2500
 const UNSUPPORTED_VIDEO_SOURCE = 'unsupported'
 
 // eslint-disable-next-line no-useless-escape
-const YOUTUBE_REGEX = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]{11}).*/
+const YOUTUBE_REGEX =
+  /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
 // eslint-disable-next-line no-useless-escape
 const VIMEO_REGEX = /^.*(vimeo\.com\/)(channels\/[a-zA-Z0-9]*\/)?([0-9]{7,}(#t\=.*s)?)/
 
