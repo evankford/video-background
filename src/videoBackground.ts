@@ -143,7 +143,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   buildIcons() {
-    if (this.player && this.can.unmute || this.can.pause) {
+    if (this.can.unmute || this.can.pause) {
       this.icons = new Icons({wrapper: this,can: this.can, onMuteUnmute: this.toggleMute.bind(this), onPausePlay: this.togglePause.bind(this) , initialState: { muted: this.player?.muted ?? true, paused: false}})
     }
   }
@@ -358,10 +358,7 @@ export class VideoBackground extends HTMLElement {
 
   reset() {
     if (this.initialized) {
-
-
       this.logger.log("Resetting video-background.");
-
       //Setting up props
       this.initialized = false;
       this.container = this;
@@ -372,11 +369,7 @@ export class VideoBackground extends HTMLElement {
         this.muted = true;
       }
       this.paused = false;
-
     }
-
-
-
   }
 
   attributeChangedCallback() {
