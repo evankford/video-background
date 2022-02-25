@@ -86,6 +86,7 @@ export class VideoBackground extends HTMLElement {
 
   init() {
     /*Check if we need to re-init */
+    console.log('Initializing video background')
     if (this.initialized != true) {
       this.initSync();
 
@@ -96,7 +97,8 @@ export class VideoBackground extends HTMLElement {
     }
   }
   initSync() {
-    this.logger.log('Initializing video background')
+    console.log('Initializing video background sources')
+    // this.logger.log('Initializing video background')
 
       this.status = "loading";
 
