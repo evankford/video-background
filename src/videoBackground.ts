@@ -107,6 +107,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   afterAutoplay() {
+    console.log("After Autoplay")
     if (!this.canAutoplay) {
       throw new Error("Should never run before autoplay support is defined")
     }
@@ -126,6 +127,7 @@ export class VideoBackground extends HTMLElement {
 
 
   async buildDOM() {
+    console.log("Building DOM")
     this.buildOverlay();
     this.buildPoster();
 
@@ -273,6 +275,7 @@ export class VideoBackground extends HTMLElement {
 
 
   buildOverlay() {
+    console.log("Building Overlay")
     this.overlayEl = document.createElement('div');
     this.overlayEl.classList.add('vbg__overlay');
     this.appendChild(this.overlayEl);
@@ -359,6 +362,7 @@ export class VideoBackground extends HTMLElement {
   reset() {
     if (this.initialized) {
       this.logger.log("Resetting video-background.");
+      console.log("Resetting video-background.");
       //Setting up props
       this.initialized = false;
       this.container = this;
