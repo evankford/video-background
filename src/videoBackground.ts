@@ -104,7 +104,9 @@ export class VideoBackground extends HTMLElement {
 
       //Compile sources
       const compiled = compileSources(this.src);
-      console.log("Sources Compiled")
+
+      console.log("Sources Compiled: " + this.src);
+      console.log(compiled)
       if (compiled) {
         this.type = compiled.type;
         this.sources = compiled.sources;
