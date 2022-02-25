@@ -53,6 +53,7 @@ export class VideoBackground extends HTMLElement {
   paused: boolean
   size?: string
   muted: boolean
+  src: string | undefined | null
   posterEl?:HTMLImageElement|HTMLPictureElement
   startTime?:number
   sourceId?:string
@@ -70,6 +71,9 @@ export class VideoBackground extends HTMLElement {
 
     this.initialized = false
     this.container = this;
+
+    this.src = this.getAttribute('src');
+
 
     this.can = { unmute: this.hasAttribute('can-unmute'), pause:  this.hasAttribute('can-pause')};
     this.muted = this.getAttribute('muted') !== 'false';
@@ -103,6 +107,10 @@ export class VideoBackground extends HTMLElement {
       this.status = "loading";
 
       //Compile sources
+      if (this.src == null) {
+        console.log("No Source Provided");
+        return;
+      }
       const compiled = compileSources(this.src);
 
       console.log("Sources Compiled: " + this.src);
@@ -338,22 +346,6 @@ export class VideoBackground extends HTMLElement {
     }
   }
 
-  get src():string|null {
-    if (this.src) {
-      return this.src;
-    }
-    const src = this.getAttribute('src');
-    if (typeof src == 'string') {
-      compileSources(src)
-
-    }
-    return src;
-  }
-
-  set src(srcString:string|null) {
-    // this.src = srcString
-    compileSources(srcString);
-  }
 
 
   /**

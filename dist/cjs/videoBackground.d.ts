@@ -23,6 +23,7 @@ export declare class VideoBackground extends HTMLElement {
     paused: boolean;
     size?: string;
     muted: boolean;
+    src: string | undefined | null;
     posterEl?: HTMLImageElement | HTMLPictureElement;
     startTime?: number;
     sourceId?: string;
@@ -50,8 +51,6 @@ export declare class VideoBackground extends HTMLElement {
     set status(status: loadingStatus);
     get poster(): string | false;
     get posterSet(): string | false;
-    get src(): string | null;
-    set src(srcString: string | null);
     set poster(posterString: string | false);
     handleMalformedSource(url: string): Source;
     reset(): void;
