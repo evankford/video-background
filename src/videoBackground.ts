@@ -171,6 +171,7 @@ export class VideoBackground extends HTMLElement {
       //  return this.handleFallbackNoVideo();
     }
     if (!this.sources || !this.type)  {
+      console.log(`Still no sources, WTF????, sources: ${this.sources}, type: ${this.type} `)
        return this.handleFallbackNoVideo();
     }
 
