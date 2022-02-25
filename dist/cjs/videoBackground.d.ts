@@ -33,6 +33,7 @@ export declare class VideoBackground extends HTMLElement {
     logger: Logger;
     constructor();
     init(): void;
+    initSync(): void;
     afterAutoplay(): void;
     buildDOM(): Promise<void>;
     buildIcons(): void;

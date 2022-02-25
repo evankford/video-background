@@ -87,7 +87,16 @@ export class VideoBackground extends HTMLElement {
   init() {
     /*Check if we need to re-init */
     if (this.initialized != true) {
-      this.logger.log('Initializing video background')
+      this.initSync();
+
+      this.buildDOM();
+    } else {
+      this.reset();
+      this.init();
+    }
+  }
+  initSync() {
+    this.logger.log('Initializing video background')
 
       this.status = "loading";
 
@@ -102,12 +111,6 @@ export class VideoBackground extends HTMLElement {
           this.breakpoints = compiled.breakpoints
         }
       }
-
-      this.buildDOM();
-    } else {
-      this.reset();
-      this.init();
-    }
   }
 
   afterAutoplay() {
@@ -162,6 +165,10 @@ export class VideoBackground extends HTMLElement {
 
     if (!this.sources || !this.type)  {
       console.log(`No sources or type, sources: ${this.sources}, type: ${this.type} `)
+      this.initSync();
+      //  return this.handleFallbackNoVideo();
+    }
+    if (!this.sources || !this.type)  {
        return this.handleFallbackNoVideo();
     }
 
