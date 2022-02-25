@@ -339,6 +339,9 @@ export class VideoBackground extends HTMLElement {
   }
 
   get src():string|null {
+    if (this.src) {
+      return this.src;
+    }
     const src = this.getAttribute('src');
     if (typeof src == 'string') {
       compileSources(src)
@@ -350,11 +353,6 @@ export class VideoBackground extends HTMLElement {
   set src(srcString:string|null) {
     // this.src = srcString
     compileSources(srcString);
-    // if (srcString == null) {
-    //   this.removeAttribute('src');
-    // } else {
-    //   this.setAttribute('src',  srcString);
-    // }
   }
 
 
