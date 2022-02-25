@@ -373,6 +373,7 @@ export class VideoBackground extends HTMLElement {
   }
 
   attributeChangedCallback() {
+    console.log("Attribute is changed");
     this.reset();
     this.init();
   }
