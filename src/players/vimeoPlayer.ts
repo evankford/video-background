@@ -27,7 +27,7 @@ export class VimeoPlayer extends VideoPlayer{
       return
     }
     this.player.destroy();
-
+    this.player = undefined;
   }
 
 

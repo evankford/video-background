@@ -170,7 +170,7 @@ export class VideoBackground extends HTMLElement {
       //Check to make sure we have sources
     } else if (this.type == 'vimeo') {
       this.player = new VimeoPlayer({source: this.sources, parent: this})
-
+      console.log(this.player);
     } else if (this.type == 'youtube') {
       this.player = new YoutubePlayer({source: this.sources, parent: this})
     }

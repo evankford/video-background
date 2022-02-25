@@ -62,6 +62,7 @@ export class YoutubePlayer extends VideoPlayer{
 
 
   build() {
+
     this.afterPlayerSetup().then(() => {
       this.status.ready = true;
       this.status.apiReady = true;
