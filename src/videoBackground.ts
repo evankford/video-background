@@ -104,6 +104,9 @@ export class VideoBackground extends HTMLElement {
       }
 
       this.buildDOM();
+    } else {
+      this.reset();
+      this.init();
     }
   }
 
