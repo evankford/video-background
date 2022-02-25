@@ -116,6 +116,8 @@ export class VideoBackground extends HTMLElement {
       this.can.unmute = false
     }
     if (this.canAutoplay.video) {
+          console.log("Can Autoplay Video, should build video")
+
       this.buildVideo();
       this.buildIcons();
     } else {
@@ -155,10 +157,12 @@ export class VideoBackground extends HTMLElement {
 
 
     if (!this.sources || !this.type)  {
+      console.log(`No sources or type, sources: ${this.sources}, type: ${this.type} `)
        return this.handleFallbackNoVideo();
     }
 
-    this.logger.log(`Building ${this.type} video based on source: ${this.sources[0].url}` );
+    // this.logger.log(`Building ${this.type} video based on source: ${this.sources[0].url}` );
+    console.log(`Building ${this.type} video based on source: ${this.sources[0].url}` );
 
     if (this.type == 'local' ) {
       this.player = new LocalPlayer({source: this.sources!, parent: this, breakpoints: this.breakpoints})
