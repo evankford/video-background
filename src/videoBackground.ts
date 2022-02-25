@@ -93,6 +93,7 @@ export class VideoBackground extends HTMLElement {
 
       //Compile sources
       const compiled = compileSources(this.src);
+      console.log("Sources Compiled")
       if (compiled) {
         this.type = compiled.type;
         this.sources = compiled.sources;
@@ -386,11 +387,10 @@ export class VideoBackground extends HTMLElement {
     this.init();
   }
   connectedCallback() {
+    console.log("Connected, let's init!")
     this.init()
   }
   disconnectedCallback() {
     this.reset()
   }
-
-
 }
