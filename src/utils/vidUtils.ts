@@ -1,4 +1,4 @@
-import canAutoplay from "can-autoplay";
+// import canAutoplay from "can-autoplay";
 import {  YOUTUBE_REGEX, VIMEO_REGEX } from '../constants/instance.js'
 interface ProviderUtilsShape {
   parsePath: string | null,
@@ -66,19 +66,19 @@ const getVideoID = (srcs: SourcesShape | undefined) => {
 
 async function checkForAutoplay(){
 
-    const videoResult = await canAutoplay.video({inline: true, muted: true, timeout: 500})
-    const audioResult = await canAutoplay.audio({inline: true, muted: false, timeout: 500})
+    // const videoResult = await canAutoplay.video({inline: true, muted: true, timeout: 500})
+    // const audioResult = await canAutoplay.audio({inline: true, muted: false, timeout: 500})
 
-    if (audioResult && videoResult) {
-     return {
-        video: videoResult.result,
-        audio: audioResult.result
-      }
-    }
+    // if (audioResult && videoResult) {
+    //  return {
+    //     video: videoResult.result,
+    //     audio: audioResult.result
+    //   }
+    // }
 
     return {
-      video: false,
-      audio: false
+      video: true,
+      audio: true
     }
   }
 

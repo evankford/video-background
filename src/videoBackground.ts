@@ -71,10 +71,7 @@ export class VideoBackground extends HTMLElement {
 
     this.initialized = false
     this.container = this;
-
     this.src = this.getAttribute('src');
-
-
     this.can = { unmute: this.hasAttribute('can-unmute'), pause:  this.hasAttribute('can-pause')};
     this.muted = this.getAttribute('muted') !== 'false';
     this.logger = new Logger(this.getAttribute('debug'));
@@ -90,7 +87,6 @@ export class VideoBackground extends HTMLElement {
 
   init() {
     /*Check if we need to re-init */
-    console.log('Initializing video background')
     if (this.initialized != true) {
       this.initSync();
 
@@ -101,20 +97,17 @@ export class VideoBackground extends HTMLElement {
     }
   }
   initSync() {
-    console.log('Initializing video background sources')
     // this.logger.log('Initializing video background')
 
       this.status = "loading";
 
       //Compile sources
       if (this.src == null) {
-        console.log("No Source Provided");
+
         return;
       }
       const compiled = compileSources(this.src);
 
-      console.log("Sources Compiled: " + this.src);
-      console.log(compiled)
       if (compiled) {
         this.type = compiled.type;
         this.sources = compiled.sources;
@@ -126,7 +119,6 @@ export class VideoBackground extends HTMLElement {
   }
 
   afterAutoplay() {
-    console.log("After Autoplay")
     if (!this.canAutoplay) {
       throw new Error("Should never run before autoplay support is defined")
     }
