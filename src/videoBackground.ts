@@ -127,8 +127,6 @@ export class VideoBackground extends HTMLElement {
       this.can.unmute = false
     }
     if (this.canAutoplay.video) {
-          console.log("Can Autoplay Video, should build video")
-
       this.buildVideo();
       this.buildIcons();
     } else {
@@ -140,7 +138,6 @@ export class VideoBackground extends HTMLElement {
 
 
   async buildDOM() {
-    console.log("Building DOM")
     this.buildOverlay();
     this.buildPoster();
 
@@ -168,17 +165,14 @@ export class VideoBackground extends HTMLElement {
 
 
     if (!this.sources || !this.type)  {
-      console.log(`No sources or type, sources: ${this.sources}, type: ${this.type} `)
       this.initSync();
       //  return this.handleFallbackNoVideo();
     }
     if (!this.sources || !this.type)  {
-      console.log(`Still no sources, WTF????, sources: ${this.sources}, type: ${this.type} `)
        return this.handleFallbackNoVideo();
     }
 
     // this.logger.log(`Building ${this.type} video based on source: ${this.sources[0].url}` );
-    console.log(`Building ${this.type} video based on source: ${this.sources[0].url}` );
 
     if (this.type == 'local' ) {
       this.player = new LocalPlayer({source: this.sources!, parent: this, breakpoints: this.breakpoints})
@@ -186,7 +180,6 @@ export class VideoBackground extends HTMLElement {
       //Check to make sure we have sources
     } else if (this.type == 'vimeo') {
       this.player = new VimeoPlayer({source: this.sources, parent: this})
-      console.log(this.player);
     } else if (this.type == 'youtube') {
       this.player = new YoutubePlayer({source: this.sources, parent: this})
     }
@@ -295,7 +288,7 @@ export class VideoBackground extends HTMLElement {
 
 
   buildOverlay() {
-    console.log("Building Overlay")
+
     this.overlayEl = document.createElement('div');
     this.overlayEl.classList.add('vbg__overlay');
     this.appendChild(this.overlayEl);
@@ -364,7 +357,7 @@ export class VideoBackground extends HTMLElement {
   reset() {
     if (this.initialized) {
       this.logger.log("Resetting video-background.");
-      console.log("Resetting video-background.");
+
       //Setting up props
       this.initialized = false;
       this.container = this;
@@ -379,12 +372,10 @@ export class VideoBackground extends HTMLElement {
   }
 
   attributeChangedCallback() {
-    console.log("Attribute is changed");
     this.reset();
     this.init();
   }
   connectedCallback() {
-    console.log("Connected, let's init!")
     this.init()
   }
   disconnectedCallback() {

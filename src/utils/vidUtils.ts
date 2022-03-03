@@ -25,7 +25,7 @@ const providerUtils:ProvidersShape = {
 }
 
 function checkExternalSource(srcs?:SourcesShape ):Source|false{
-  console.log(srcs);
+
     if (srcs && typeof srcs == 'object') {
       if ('type' in srcs[0]) {
         return srcs[0]
@@ -44,7 +44,6 @@ const getVideoID = (srcs: SourcesShape | undefined) => {
     return false;
   }
   const provider = providerUtils[src.type];
-  console.log(provider);
   let match = provider && src.url.match(provider.idRegex)
   if (!match) {
       console.error(`Video id at ${ src.url } is not valid`)

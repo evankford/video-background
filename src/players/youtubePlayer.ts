@@ -93,7 +93,7 @@ export class YoutubePlayer extends VideoPlayer{
     if (this.player) {
       this.player.seekTo(this.config.startTime, true)
        this.getAspectRatio().then((data)=> {
-         console.log("We got the aspect?")
+
       this.props.aspectRatio = data;
       window.setTimeout(this.resize.bind(this), 400)
       });
@@ -110,13 +110,13 @@ export class YoutubePlayer extends VideoPlayer{
       const resp = await fetch (`https://noembed.com/embed?url=https://youtube.com/embed/${this.id}`, {
       })
       const data:{height:number, width: number} = await resp.json()
-      console.log(data);
+
       if (data && data.height && data.width) {
         return data.height / data.width
       }
       return 0.5625;
     } catch(e) {
-      console.log("Failed to fetch aspect ratio")
+
       return 0.5624
     }
 
@@ -145,9 +145,9 @@ export class YoutubePlayer extends VideoPlayer{
       } else {
         this.parent.querySelector('iframe')!.classList.remove('vbg--loading');
       }
-      console.log('started : ' + this.status.started)
+
       if (this.status.started == false) {
-        console.log("Trying to play youtube vbideo")
+
 
         this.player.playVideo();
       } else {
