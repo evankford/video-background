@@ -192,6 +192,7 @@ export default class VideoPlayer {
         iframe = this.iframe;
       }
       if (!iframe) {
+        console.log('No iframe found.')
         return;
       }
       iframe.removeAttribute('width')

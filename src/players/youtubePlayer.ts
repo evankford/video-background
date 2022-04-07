@@ -91,6 +91,7 @@ export class YoutubePlayer extends VideoPlayer{
 
   async afterPlayerSetup() {
     if (this.player) {
+      this.iframe = this.player.getIframe();
       this.player.seekTo(this.config.startTime, true)
        this.getAspectRatio().then((data)=> {
 
