@@ -1,6 +1,6 @@
 {
-  "name": "@atmtfy/video-background",
-  "version": "0.8.0",
+  "name": "@evankford/video-background",
+  "version": "0.7.0",
   "description": "Automatic background video from various sources (Youtube, MP4, vimeo) with autoplay across devices. No JS dependencies.",
   "main": "src/index.ts",
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "@atmtfy/video-background"
+    "url": "@evankford/video-background"
   },
   "keywords": [
     "background",
@@ -28,7 +28,7 @@
     "background",
     "hero"
   ],
-  "author": "atmtfy",
+  "author": "evankford",
   "license": "ISC",
   "devDependencies": {
     "@types/can-autoplay": "^3.0.1",
