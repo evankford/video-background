@@ -78,7 +78,7 @@ export class LocalPlayer extends VideoPlayer {
       this.el.setAttribute('muted', "true");
     }
     if (this.config.loop) {
-      this.el.setAttribute('loop', "true");
+      this.el.setAttribute('loop', "");
     }
     this.el.currentTime = this.config.startTime;
     this.el.volume = 0;
