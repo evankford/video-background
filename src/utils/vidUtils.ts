@@ -64,7 +64,7 @@ const getVideoID = (srcs: SourcesShape | undefined) => {
 
 
 async function checkForAutoplay(){
-
+  // To do : fix Autoplay checker
     // const videoResult = await canAutoplay.video({inline: true, muted: true, timeout: 500})
     // const audioResult = await canAutoplay.audio({inline: true, muted: false, timeout: 500})
 
@@ -82,4 +82,3 @@ async function checkForAutoplay(){
   }
 
 export {getVideoID, checkForAutoplay};
-

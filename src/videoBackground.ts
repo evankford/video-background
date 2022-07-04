@@ -1,9 +1,7 @@
 import { checkForAutoplay } from "./utils/vidUtils";
 import { compileSources } from "./utils/sources";
 import Icons from './utils/icons';
-
 import Logger from './utils/logger';
-
 import { LocalPlayer } from "./players/localPlayer";
 import { VimeoPlayer } from "./players/vimeoPlayer";
 import { YoutubePlayer } from "./players/youtubePlayer";
@@ -146,8 +144,6 @@ export class VideoBackground extends HTMLElement {
 
   async buildVideo() {
     //Never should have mixed sources.
-
-
     if (!this.sources || !this.type)  {
       this.initSync();
       //  return this.handleFallbackNoVideo();
