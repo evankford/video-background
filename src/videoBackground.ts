@@ -1,7 +1,5 @@
 import { checkForAutoplay } from "./utils/vidUtils";
 import { compileSources } from "./utils/sources";
-import { initializeVimeoAPI, initializeVimeoPlayer } from './utils/vimeo';
-import { initializeYouTubeAPI, initializeYouTubePlayer } from './utils/youtube';
 import Icons from './utils/icons';
 
 import Logger from './utils/logger';
@@ -13,20 +11,6 @@ import { YoutubePlayer } from "./players/youtubePlayer";
  var
     is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
     is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
-
-/**
- * Object for choosing the correct video initializer.
- */
-const videoSourceModules = {
-  vimeo: {
-    api: initializeVimeoAPI,
-    player: initializeVimeoPlayer
-  },
-  youtube: {
-    api: initializeYouTubeAPI,
-    player: initializeYouTubePlayer
-  }
-}
 
 interface CanAutoPlayShape {
   video: boolean,
@@ -244,7 +228,6 @@ export class VideoBackground extends HTMLElement {
 
   buildPoster() {
 
-    let hasInherentPoster = false
     //Gets a poster image element that's a child of the video-background element
     const inherentPoster  = this.checkForInherentPoster();
     if (!this.posterSet && !this.poster && !inherentPoster) {
@@ -253,7 +236,6 @@ export class VideoBackground extends HTMLElement {
     if (inherentPoster != false) {
       this.logger.log("Found an inherent poster");
       //Found a poster element
-      hasInherentPoster = true;
       this.posterEl = inherentPoster;
       this.container.innerHTML = '';
     } else {
@@ -281,9 +263,7 @@ export class VideoBackground extends HTMLElement {
 
     //Add styling classes;
     this.posterEl.classList.add('vbg__poster')
-
-
-      this.appendChild(this.posterEl);
+    this.appendChild(this.posterEl);
   }
 
 
