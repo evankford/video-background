@@ -1,6 +1,6 @@
 {
-  "name": "video-background",
-  "version": "1.0.0",
+  "name": "@evankford/video-background",
+  "version": "0.9.3",
   "description": "Automatic background video from various sources (Youtube, MP4, vimeo) with autoplay across devices. No JS dependencies.",
   "main": "src/index.ts",
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "video-background"
+    "url": "@evankford/video-background"
   },
   "keywords": [
     "background",

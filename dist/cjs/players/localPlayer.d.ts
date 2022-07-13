@@ -1,6 +1,6 @@
 import VideoPlayer from "../players/videoPlayer";
 export declare class LocalPlayer extends VideoPlayer {
-    source: LocalSource[];
+    sources: LocalSource[];
     el?: HTMLVideoElement;
     lastWindowWidth: number;
     constructor(config: PlayerConfigInput);

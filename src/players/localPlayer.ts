@@ -2,7 +2,7 @@ import { getSourcesFilteredBySize, getFileType } from "../utils/sources";
 import VideoPlayer from "../players/videoPlayer";
 
 export class LocalPlayer extends VideoPlayer {
-  source: LocalSource[]
+  sources: LocalSource[]
   el?: HTMLVideoElement
   lastWindowWidth: number
   constructor(config:PlayerConfigInput) {
@@ -11,10 +11,10 @@ export class LocalPlayer extends VideoPlayer {
 
     //Config parsing
     if (this.config.breakpoints) {
-      this.source = getSourcesFilteredBySize(this.config.source!),
+      this.sources = getSourcesFilteredBySize(this.config.source!),
       window.addEventListener('resize', this.checkResize.bind(this));
     } else {
-      this.source = [{ url: this.config.source![0].url, type: 'local', fileType: getFileType(this.config.source![0].url)}] ;
+      this.sources = [{ url: this.config.source![0].url, type: 'local', fileType: getFileType(this.config.source![0].url)}] ;
     }
 
     this.build();
@@ -67,7 +67,7 @@ export class LocalPlayer extends VideoPlayer {
   build() {
 
     if (this.el) this.destroy(); //Already initialized check
-    if (!this.source) return;
+    if (!this.sources) return;
 
     this.el = document.createElement('video');
     this.el.classList.add('vbg__video')
@@ -86,7 +86,7 @@ export class LocalPlayer extends VideoPlayer {
     //Need to reset sources
     this.el.innerHTML = "";
     const el = this.el;
-    this.source.forEach((src:LocalSource, i:number)=> {
+    this.sources.forEach((src:LocalSource, i:number)=> {
       const child = document.createElement('source');
 
       if ('fileType' in src) {
