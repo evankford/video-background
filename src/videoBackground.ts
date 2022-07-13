@@ -62,13 +62,22 @@ export class VideoBackground extends HTMLElement {
       this.muted = true;
     }
     this.paused = false;
+    console.log(this);
     // this.init();
   }
 
 
 
   init() {
-    console.log('Loading?');
+    if (is_ios && is_safari) {
+      this.muted = true;
+    }
+    this.src = this.getAttribute('src');
+    this.can = { unmute: this.hasAttribute('can-unmute'), pause:  this.hasAttribute('can-pause')};
+    this.muted = this.getAttribute('muted') !== 'false';
+    this.logger = new Logger(this.getAttribute('debug'));
+        this.paused = false;
+
     /*Check if we need to re-init */
     if (this.initialized != true) {
       this.initSync();
