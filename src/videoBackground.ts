@@ -68,6 +68,7 @@ export class VideoBackground extends HTMLElement {
 
 
   init() {
+    console.log('Loading?');
     /*Check if we need to re-init */
     if (this.initialized != true) {
       this.initSync();
@@ -85,7 +86,7 @@ export class VideoBackground extends HTMLElement {
 
       //Compile sources
       if (this.src == null) {
-
+        console.error('No source on video-background')
         return;
       }
       const compiled = compileSources(this.src);
