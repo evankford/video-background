@@ -62,7 +62,6 @@ export class VideoBackground extends HTMLElement {
       this.muted = true;
     }
     this.paused = false;
-    console.log(this);
     // this.init();
   }
 
@@ -76,7 +75,7 @@ export class VideoBackground extends HTMLElement {
     this.can = { unmute: this.hasAttribute('can-unmute'), pause:  this.hasAttribute('can-pause')};
     this.muted = this.getAttribute('muted') !== 'false';
     this.logger = new Logger(this.getAttribute('debug'));
-        this.paused = false;
+    this.paused = false;
 
     /*Check if we need to re-init */
     if (this.initialized != true) {
@@ -99,7 +98,6 @@ export class VideoBackground extends HTMLElement {
         return;
       }
       const compiled = compileSources(this.src);
-      console.log(compiled);
 
       if (compiled) {
         this.type = compiled.type;
