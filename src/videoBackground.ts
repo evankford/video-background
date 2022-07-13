@@ -89,6 +89,7 @@ export class VideoBackground extends HTMLElement {
         return;
       }
       const compiled = compileSources(this.src);
+      console.log(compiled);
 
       if (compiled) {
         this.type = compiled.type;

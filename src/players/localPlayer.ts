@@ -88,7 +88,7 @@ export class LocalPlayer extends VideoPlayer {
     const el = this.el;
     this.sources.forEach((src:LocalSource, i:number)=> {
       const child = document.createElement('source');
-
+      console.log(child);
       if ('fileType' in src) {
         child.type = 'video/' + src.fileType;
       }
