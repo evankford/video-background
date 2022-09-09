@@ -94,7 +94,7 @@ export class VideoBackground extends HTMLElement {
 
       //Compile sources
       if (this.src == null) {
-        console.error('No source on video-background')
+        this.logger.log('No source on video-background')
         return;
       }
       const compiled = compileSources(this.src);

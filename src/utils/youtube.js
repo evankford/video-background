@@ -124,7 +124,7 @@ const initializeYouTubePlayer = ({
     return new win.YT.Player(playerElement, {
 
       videoId: videoId,
-      host: "https://www.youtube-nocookie.com",
+      host: "https://www.youtube.com",
       playerVars: {
         autohide: 1,
         autoplay: 0,
